@@ -36,7 +36,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 public class BerDecoder extends AbstractAsnTlvDecoder<byte[], byte[], byte[], BerData> {
-    private static final Tag INSTANCE = new BerTag(UniversalTags.SEQUENCE, Type.UNIVERSAL, true);
+    public static final Tag UNIVERSAL_TAG = new BerTag(UniversalTags.SEQUENCE, Type.UNIVERSAL, true);
 
     public BerDecoder(final TagFactory tagFactory,
                       final AsnAutoResolver autoResolver,
@@ -59,7 +59,7 @@ public class BerDecoder extends AbstractAsnTlvDecoder<byte[], byte[], byte[], Be
 
     @Override
     protected Tag getUniversalTag() {
-        return INSTANCE;
+        return UNIVERSAL_TAG;
     }
 
     @Override
