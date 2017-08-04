@@ -18,9 +18,6 @@ package com.github.alturkovic.asn.ber.decoder;
 
 import com.github.alturkovic.asn.AsnAutoResolver;
 import com.github.alturkovic.asn.AsnClassDescription;
-import com.github.alturkovic.asn.Type;
-import com.github.alturkovic.asn.UniversalTags;
-import com.github.alturkovic.asn.ber.tag.BerTag;
 import com.github.alturkovic.asn.ber.tlv.BerData;
 import com.github.alturkovic.asn.ber.util.BerUtils;
 import com.github.alturkovic.asn.ber.util.HexUtils;
@@ -36,8 +33,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 public class BerDecoder extends AbstractAsnTlvDecoder<byte[], byte[], byte[], BerData> {
-    public static final Tag UNIVERSAL_TAG = new BerTag(UniversalTags.SEQUENCE, Type.UNIVERSAL, true);
-
     public BerDecoder(final TagFactory tagFactory,
                       final AsnAutoResolver autoResolver,
                       final FieldAccessor fieldAccessor,
@@ -59,7 +54,7 @@ public class BerDecoder extends AbstractAsnTlvDecoder<byte[], byte[], byte[], Be
 
     @Override
     protected Tag getUniversalTag() {
-        return UNIVERSAL_TAG;
+        return BerUtils.UNIVERSAL_TAG;
     }
 
     @Override

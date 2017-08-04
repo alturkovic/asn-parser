@@ -17,6 +17,7 @@
 package com.github.alturkovic.asn.ber.util;
 
 import com.github.alturkovic.asn.Type;
+import com.github.alturkovic.asn.UniversalTags;
 import com.github.alturkovic.asn.ber.tag.BerTag;
 import com.github.alturkovic.asn.exception.AsnParseException;
 import lombok.AccessLevel;
@@ -32,6 +33,7 @@ import java.util.Arrays;
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class BerUtils {
+    public static final BerTag UNIVERSAL_TAG = new BerTag(UniversalTags.SEQUENCE, Type.UNIVERSAL, true);
 
     public static BerTag parseTag(final byte[] b) {
         if (b == null || b.length == 0) {
