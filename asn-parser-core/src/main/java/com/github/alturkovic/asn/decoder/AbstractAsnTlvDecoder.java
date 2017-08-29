@@ -40,6 +40,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -134,7 +135,11 @@ public abstract class AbstractAsnTlvDecoder<T, L, V, D extends TlvData<T, L, V>>
             final AsnPostProcessMethod asnPostProcessMethod = clazz.getDeclaredAnnotation(AsnPostProcessMethod.class);
 
             if (asnPostProcessMethod != null) {
-                clazz.getDeclaredMethod(asnPostProcessMethod.value()).invoke(instance);
+                final Method declaredMethod = clazz.getDeclaredMethod(asnPostProcessMethod.value());
+                if (!declaredMethod.isAccessible()) {
+                    declaredMethod.setAccessible(true);
+                }
+                declaredMethod.invoke(instance);
             }
 
             return instance;

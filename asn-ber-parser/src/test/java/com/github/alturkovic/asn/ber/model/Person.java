@@ -50,7 +50,7 @@ public class Person {
         this.phone = phone;
     }
 
-    public void postDecode() {
+    private void postDecode() {
         adult = age >= 18;
     }
 }
