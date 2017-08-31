@@ -84,7 +84,7 @@ public abstract class AbstractAsnTlvDecoder<T, L, V, D extends TlvData<T, L, V>>
         try {
             final AsnClassDescription asnClassDescription = classDescriptionCache.get(clazz, () -> new AsnClassDescription(tagFactory, autoResolver, clazz));
 
-            final D tlvData = tlvDataReader.readNext(clazz, getValueInputStream(data));
+            final D tlvData = tlvDataReader.readNext(getValueInputStream(data));
             final Tag parsedMainTag = parseTag(tlvData);
 
             if (!structureTag.equals(parsedMainTag)) {
@@ -97,7 +97,7 @@ public abstract class AbstractAsnTlvDecoder<T, L, V, D extends TlvData<T, L, V>>
             final Multiset<Tag> tagCounter = HashMultiset.create();
             while (valueStream.available() > 0) {
                 //Read element by element
-                final D fieldTlvData = tlvDataReader.readNext(clazz, valueStream);
+                final D fieldTlvData = tlvDataReader.readNext(valueStream);
                 if (!fieldTlvData.isValuePresent()) {
                     continue;
                 }
@@ -152,7 +152,7 @@ public abstract class AbstractAsnTlvDecoder<T, L, V, D extends TlvData<T, L, V>>
         try {
             final InputStream listStream = getValueInputStream(listValueData);
             while (listStream.available() > 0) {
-                final D listElementTlv = tlvDataReader.readNext(taggedField.getType(), listStream);
+                final D listElementTlv = tlvDataReader.readNext(listStream);
                 final Tag parsedListElementTag = parseTag(listElementTlv);
                 if (getUniversalTag().equals(parsedListElementTag)) {
                     if (taggedField.isStructured()) {

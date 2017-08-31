@@ -39,7 +39,7 @@ public class BerDataReader implements TlvDataReader<BerData> {
     }
 
     @Override
-    public BerData readNext(final Class<?> clazz, final InputStream inputStream) {
+    public BerData readNext(final InputStream inputStream) {
         final byte[] tag = tagReader.read(inputStream);
         final byte[] length = lengthReader.read(inputStream);
         final byte[] value = valueReader.read(inputStream, BerUtils.parseLength(length));

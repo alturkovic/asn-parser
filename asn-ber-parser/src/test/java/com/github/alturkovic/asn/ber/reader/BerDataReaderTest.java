@@ -42,7 +42,7 @@ public class BerDataReaderTest {
     })
     @TestCaseName("[{index}] read: ({0})")
     public void shouldRead(@HexParam final byte[] given, @HexParam final byte[] tag, @HexParam final byte[] length, @HexParam final byte[] value) throws Exception {
-        final BerData rawData = new BerDataReader().readNext(null, new ByteArrayInputStream(given)); // class not used with this implementation
+        final BerData rawData = new BerDataReader().readNext(new ByteArrayInputStream(given));
 
         assertThat(rawData.getTag()).isEqualTo(tag);
         assertThat(rawData.getLength()).isEqualTo(length);

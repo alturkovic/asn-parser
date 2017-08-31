@@ -43,7 +43,7 @@ public class BerDataExtractReader implements TlvDataReader<BerData> {
     }
 
     @Override
-    public BerData readNext(final Class<?> clazz, final InputStream inputStream) {
+    public BerData readNext(final InputStream inputStream) {
         byte[] tag;
         byte[] length;
         byte[] value;

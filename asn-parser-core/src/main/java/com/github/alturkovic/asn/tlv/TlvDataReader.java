@@ -19,5 +19,5 @@ package com.github.alturkovic.asn.tlv;
 import java.io.InputStream;
 
 public interface TlvDataReader<T extends TlvData> {
-    T readNext(Class<?> clazz, InputStream inputStream);
+    T readNext(InputStream inputStream);
 }
