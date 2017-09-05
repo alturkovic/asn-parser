@@ -88,7 +88,7 @@ public abstract class AbstractAsnTlvDecoder<T, L, V, D extends TlvData<T, L, V>>
             final Tag parsedMainTag = parseTag(tlvData);
 
             if (!structureTag.equals(parsedMainTag)) {
-                throw new AsnDecodeException(String.format("Defined structure tag %s on %s does not matched parser tag %s", structureTag, clazz, parsedMainTag));
+                throw new AsnDecodeException(String.format("Defined structure tag %s on %s does not match parser tag %s", structureTag, clazz, parsedMainTag));
             }
 
             final X instance = clazz.newInstance();

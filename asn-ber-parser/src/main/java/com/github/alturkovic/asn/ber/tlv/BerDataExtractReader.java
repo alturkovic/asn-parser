@@ -54,7 +54,7 @@ public class BerDataExtractReader implements TlvDataReader<BerData> {
         do {
             tag = tagReader.read(stream);
             length = lengthReader.read(stream);
-            value = valueReader.read(inputStream, BerUtils.parseLength(length));
+            value = valueReader.read(stream, BerUtils.parseLength(length));
 
             final Tag parsedTag = BerUtils.parseTag(tag);
 
