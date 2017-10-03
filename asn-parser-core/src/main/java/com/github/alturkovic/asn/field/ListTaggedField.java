@@ -32,8 +32,8 @@ public class ListTaggedField extends TaggedField {
     private final Class<?> type;
     private final Class<? extends AsnConverter<?, ?>> converter;
 
-    public ListTaggedField(final Tag tag, final Field field, final boolean structured, final Class<?> type, final Class<? extends AsnConverter<?, ?>> converter) {
-        super(tag, field);
+    public ListTaggedField(final int fieldPosition, final Tag tag, final Field field, final boolean structured, final Class<?> type, final Class<? extends AsnConverter<?, ?>> converter) {
+        super(fieldPosition, tag, field);
         this.structured = structured;
         this.type = type;
         this.converter = converter;

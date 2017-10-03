@@ -16,12 +16,16 @@
 
 package com.github.alturkovic.asn.ber.decoder;
 
+import com.github.alturkovic.asn.ber.model.AddressString;
 import com.github.alturkovic.asn.ber.model.BerExampleProvider;
-import com.github.alturkovic.asn.decoder.AsnDecoder;
+import com.github.alturkovic.asn.ber.model.MultipleAddressStringWrapper;
 import com.github.alturkovic.asn.ber.params.HexParam;
+import com.github.alturkovic.asn.decoder.AsnDecoder;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import junitparams.naming.TestCaseName;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -38,5 +42,13 @@ public class BerDecoderTest {
     public void shouldDecode(final Object obj, @HexParam final byte[] ber) {
         final Object decoded = decoder.decode(obj.getClass(), ber);
         assertThat(decoded).isEqualTo(obj);
+    }
+
+    @Test
+    public void shouldDecodeMultipleAddressStingsAndDiscardTheExtraOne() throws DecoderException {
+        final byte[] encoded = Hex.decodeHex("302aa40c0201010404616472318201ffa40c020102040461647232820100a40c020103040461647233820100".toCharArray());
+        final MultipleAddressStringWrapper decoded = decoder.decode(MultipleAddressStringWrapper.class, encoded);
+        assertThat(decoded.getAddressOne()).isEqualTo(new AddressString(1, "adr1", true));
+        assertThat(decoded.getAddressTwo()).isEqualTo(new AddressString(2, "adr2", false));
     }
 }

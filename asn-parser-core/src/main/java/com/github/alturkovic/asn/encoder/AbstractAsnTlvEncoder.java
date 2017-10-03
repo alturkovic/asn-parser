@@ -66,7 +66,7 @@ public abstract class AbstractAsnTlvEncoder<V> implements AsnEncoder<V> {
 
             asnTlvStructureBuilder = createNewBuilder(structureTag);
 
-            for (final TaggedField taggedField : asnClassDescription.getSortedFields()) {
+            for (final TaggedField taggedField : asnClassDescription.getClassDeclaredOrderedTaggedFields()) {
                 final V encoded;
                 if (taggedField.isPrimitive()) {
                     encoded = encodePrimitive(object, (PrimitiveTaggedField) taggedField);

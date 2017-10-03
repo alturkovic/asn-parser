@@ -22,7 +22,8 @@ import lombok.Data;
 import java.lang.reflect.Field;
 
 @Data
-public abstract class TaggedField {
+public abstract class TaggedField implements Comparable<TaggedField> {
+    private final int fieldPosition; // helps keep the class defined order when encoding
     private final Tag tag;
     private final Field field;
 
@@ -36,5 +37,10 @@ public abstract class TaggedField {
 
     public boolean isList() {
         return false;
+    }
+
+    @Override
+    public int compareTo(final TaggedField tf) {
+        return this.fieldPosition > tf.fieldPosition ? 1 : -1;
     }
 }

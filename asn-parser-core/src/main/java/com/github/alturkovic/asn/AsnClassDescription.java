@@ -35,8 +35,7 @@ import lombok.Data;
 import lombok.Getter;
 
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Data
 public class AsnClassDescription {
@@ -47,46 +46,53 @@ public class AsnClassDescription {
         init(clazz, tagFactory, asnAutoResolver);
     }
 
-    public Collection<TaggedField> getSortedFields() {
-        return multimap.values();
-    }
-
     private void init(final Class<?> clazz, final TagFactory tagFactory, final AsnAutoResolver asnAutoResolver) {
         final Multimap<Tag, TaggedField> multimap = MultimapBuilder.treeKeys().arrayListValues().build();
 
+        int fieldPosition = 0;
         for (final Field field : clazz.getDeclaredFields()) {
+            Tag tag = null;
+            TaggedField taggedField = null;
+
             if (field.isAnnotationPresent(AsnPrimitive.class)) {
                 final AsnPrimitive primitiveTag = field.getAnnotation(AsnPrimitive.class);
                 final AsnTag asnTag = primitiveTag.value();
 
-                final Tag tag = getTag(tagFactory, asnAutoResolver, asnTag, field.getType(), false);
                 final Class<? extends AsnConverter<?, ?>> converter = getConverter(asnAutoResolver, primitiveTag.asnConverter(), field.getType());
 
-                final PrimitiveTaggedField taggedField = new PrimitiveTaggedField(tag, field, converter);
-
-                multimap.put(tag, taggedField);
+                tag = getTag(tagFactory, asnAutoResolver, asnTag, field.getType(), false);
+                taggedField = new PrimitiveTaggedField(fieldPosition, tag, field, converter);
             } else if (field.isAnnotationPresent(AsnStructure.class)) {
                 final AsnStructure structureTag = field.getAnnotation(AsnStructure.class);
                 final AsnTag asnTag = structureTag.value();
 
-                final Tag tag = getTag(tagFactory, asnAutoResolver, asnTag, field.getType(), true);
-                final StructureTaggedField taggedField = new StructureTaggedField(tag, field);
-
-                multimap.put(tag, taggedField);
+                tag = getTag(tagFactory, asnAutoResolver, asnTag, field.getType(), true);
+                taggedField = new StructureTaggedField(fieldPosition, tag, field);
             } else if (field.isAnnotationPresent(AsnList.class)) {
                 final AsnList listTag = field.getAnnotation(AsnList.class);
                 final AsnTag asnTag = listTag.value();
 
-                final Tag tag = getTag(tagFactory, asnAutoResolver, asnTag, field.getType(), true);
                 final Class<? extends AsnConverter<?, ?>> converter = listTag.structured() ? null : getConverter(asnAutoResolver, listTag.asnConverter(), listTag.type());
 
-                final ListTaggedField taggedField = new ListTaggedField(tag, field, listTag.structured(), listTag.type(), converter);
+                tag = getTag(tagFactory, asnAutoResolver, asnTag, field.getType(), true);
+                taggedField = new ListTaggedField(fieldPosition, tag, field, listTag.structured(), listTag.type(), converter);
+            }
 
+            if (tag != null && taggedField != null) {
                 multimap.put(tag, taggedField);
             }
+
+            fieldPosition++;
         }
 
         this.multimap = multimap;
+    }
+
+    // ensures that the order of class defined fields will be kept when encoding
+    public List<TaggedField> getClassDeclaredOrderedTaggedFields() {
+        final ArrayList<TaggedField> fieldArrayList = new ArrayList<>(multimap.values());
+        Collections.sort(fieldArrayList);
+        return fieldArrayList;
     }
 
     private Tag getTag(final TagFactory tagFactory, final AsnAutoResolver asnAutoResolver, final AsnTag asnTag, final Class<?> clazz, final boolean structured) {
@@ -116,7 +122,7 @@ public class AsnClassDescription {
             // if we need to get the second data, we also need to define the first with proper ordering
             // if we wanted to get the 1st and 3rd, we would also need to define the 2nd to order them correctly
 
-            // example is available in ber-decoder test where we define MultipleAddressStringWrapper with 2 fields with the same tag
+            // example is available in asn-ber-parser BerDecoderTest where we define MultipleAddressStringWrapper with 2 fields with the same tag
             // but 3 are available and the 3rd is discarded
             return null;
         }

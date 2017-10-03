@@ -28,8 +28,8 @@ import java.lang.reflect.Field;
 @ToString(callSuper = true)
 public class StructureTaggedField extends TaggedField {
 
-    public StructureTaggedField(final Tag tag, final Field field) {
-        super(tag, field);
+    public StructureTaggedField(final int fieldPosition, final Tag tag, final Field field) {
+        super(fieldPosition, tag, field);
     }
 
     @Override
