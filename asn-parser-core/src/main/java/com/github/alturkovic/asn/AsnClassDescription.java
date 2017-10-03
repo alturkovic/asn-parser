@@ -42,6 +42,8 @@ public class AsnClassDescription {
     @Getter(AccessLevel.NONE)
     private Multimap<Tag, TaggedField> multimap;
 
+    private List<TaggedField> classOrderedTaggedFields;
+
     public AsnClassDescription(final TagFactory tagFactory, final AsnAutoResolver asnAutoResolver, final Class<?> clazz) {
         init(clazz, tagFactory, asnAutoResolver);
     }
@@ -90,9 +92,13 @@ public class AsnClassDescription {
 
     // ensures that the order of class defined fields will be kept when encoding
     public List<TaggedField> getClassDeclaredOrderedTaggedFields() {
-        final ArrayList<TaggedField> fieldArrayList = new ArrayList<>(multimap.values());
-        Collections.sort(fieldArrayList);
-        return fieldArrayList;
+        if (classOrderedTaggedFields == null) {
+            final List<TaggedField> orderedTaggedFields = new ArrayList<>(multimap.values());
+            Collections.sort(orderedTaggedFields);
+            classOrderedTaggedFields = orderedTaggedFields;
+        }
+
+        return classOrderedTaggedFields;
     }
 
     private Tag getTag(final TagFactory tagFactory, final AsnAutoResolver asnAutoResolver, final AsnTag asnTag, final Class<?> clazz, final boolean structured) {
