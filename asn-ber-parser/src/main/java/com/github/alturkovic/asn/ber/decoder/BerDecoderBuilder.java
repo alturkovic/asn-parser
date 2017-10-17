@@ -20,13 +20,12 @@ import com.github.alturkovic.asn.AsnAutoResolver;
 import com.github.alturkovic.asn.AsnClassDescription;
 import com.github.alturkovic.asn.ber.BerAutoResolver;
 import com.github.alturkovic.asn.ber.tag.BerTagFactory;
-import com.github.alturkovic.asn.ber.tlv.BerData;
 import com.github.alturkovic.asn.ber.tlv.BerDataReader;
+import com.github.alturkovic.asn.ber.tlv.TlvDataReader;
 import com.github.alturkovic.asn.converter.AsnConverter;
 import com.github.alturkovic.asn.field.accessor.DirectFieldAccessor;
 import com.github.alturkovic.asn.field.accessor.FieldAccessor;
 import com.github.alturkovic.asn.tag.TagFactory;
-import com.github.alturkovic.asn.tlv.TlvDataReader;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
@@ -37,7 +36,7 @@ public class BerDecoderBuilder {
     private TagFactory tagFactory = new BerTagFactory();
     private AsnAutoResolver autoResolver = new BerAutoResolver();
     private FieldAccessor fieldAccessor = new DirectFieldAccessor();
-    private TlvDataReader<BerData> tlvDataReader = new BerDataReader();
+    private TlvDataReader tlvDataReader = new BerDataReader();
     private Cache<Class<?>, AsnClassDescription> classDescriptionCache;
     private Cache<Class<? extends AsnConverter<byte[], ?>>, AsnConverter<byte[], ?>> converterCache;
 
@@ -65,7 +64,7 @@ public class BerDecoderBuilder {
         return this;
     }
 
-    public BerDecoderBuilder tlvDataReader(final TlvDataReader<BerData> tlvDataReader) {
+    public BerDecoderBuilder tlvDataReader(final TlvDataReader tlvDataReader) {
         this.tlvDataReader = tlvDataReader;
         return this;
     }

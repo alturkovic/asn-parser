@@ -18,7 +18,6 @@ package com.github.alturkovic.asn.ber.encoder;
 
 import com.github.alturkovic.asn.ber.tag.BerTag;
 import com.github.alturkovic.asn.ber.util.BerUtils;
-import com.github.alturkovic.asn.encoder.AsnTlvStructureBuilder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -26,7 +25,7 @@ import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BerStructureBuilder implements AsnTlvStructureBuilder<byte[]> {
+public class BerStructureBuilder {
     private final ByteArrayOutputStream result = new ByteArrayOutputStream();
     private final List<byte[]> values = new ArrayList<>();
     private int totalLength = 0;
@@ -39,13 +38,11 @@ public class BerStructureBuilder implements AsnTlvStructureBuilder<byte[]> {
         }
     }
 
-    @Override
     public void addValue(final byte[] value) {
         totalLength += value.length;
         values.add(value);
     }
 
-    @Override
     public byte[] build() {
         try {
             result.write(BerUtils.encodeLength(totalLength));

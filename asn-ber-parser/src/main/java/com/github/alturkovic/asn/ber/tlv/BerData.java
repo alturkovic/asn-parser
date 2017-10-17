@@ -18,24 +18,28 @@ package com.github.alturkovic.asn.ber.tlv;
 
 import com.github.alturkovic.asn.ber.util.HexUtils;
 import com.github.alturkovic.asn.exception.AsnDecodeException;
-import com.github.alturkovic.asn.tlv.TlvData;
+import lombok.Data;
 import org.apache.commons.lang.ArrayUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class BerData extends TlvData<byte[], byte[], byte[]> {
+@Data
+public class BerData {
+    private final byte[] tag;
+    private final byte[] length;
+    private final byte[] value;
 
     public BerData(final byte[] tag, final byte[] length, final byte[] value) {
-        super(tag, length, value);
+        this.tag = tag;
+        this.length = length;
+        this.value = value;
     }
 
-    @Override
     public boolean isValuePresent() {
         return !ArrayUtils.isEmpty(value);
     }
 
-    @Override
     public byte[] toTlv() {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
@@ -50,7 +54,6 @@ public class BerData extends TlvData<byte[], byte[], byte[]> {
         return out.toByteArray();
     }
 
-    @Override
     public String toString() {
         return String.format("BerData[tag=%s, length=%s, value=%s]",
                 HexUtils.encode(tag),

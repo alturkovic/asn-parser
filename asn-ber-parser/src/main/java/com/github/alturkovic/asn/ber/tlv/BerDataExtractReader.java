@@ -19,7 +19,6 @@ package com.github.alturkovic.asn.ber.tlv;
 import com.github.alturkovic.asn.ber.tag.BerTag;
 import com.github.alturkovic.asn.ber.util.BerUtils;
 import com.github.alturkovic.asn.tag.Tag;
-import com.github.alturkovic.asn.tlv.TlvDataReader;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -29,7 +28,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class BerDataExtractReader implements TlvDataReader<BerData> {
+public class BerDataExtractReader implements TlvDataReader {
     private final List<BerTag> tags;
     private final BerTagReader tagReader;
     private final BerLengthReader lengthReader;
