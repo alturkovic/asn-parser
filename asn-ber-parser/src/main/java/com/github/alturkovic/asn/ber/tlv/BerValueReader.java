@@ -16,22 +16,15 @@
 
 package com.github.alturkovic.asn.ber.tlv;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.io.InputStream;
 
-@Slf4j
 public class BerValueReader extends AbstractInputStreamReader {
 
     public byte[] read(final InputStream inputStream, final int bytesToRead) {
-        log.debug("Reading {} bytes...", bytesToRead);
-
         if (bytesToRead == 0) {
             return new byte[0];
         }
 
-        final byte[] value = readBytes(inputStream, bytesToRead);
-        log.debug("Read {} byte(s)", value.length);
-        return value;
+        return readBytes(inputStream, bytesToRead);
     }
 }

@@ -22,7 +22,6 @@ import com.github.alturkovic.asn.ber.tag.BerTag;
 import com.github.alturkovic.asn.exception.AsnParseException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.ArrayUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -30,7 +29,6 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Arrays;
 
-@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class BerUtils {
     public static final BerTag UNIVERSAL_TAG = new BerTag(UniversalTags.SEQUENCE, Type.UNIVERSAL, true);
@@ -46,8 +44,6 @@ public final class BerUtils {
         int value = 0;
 
         if (b.length == 1) {
-            log.debug("BerTag is 1 byte long");
-
             if ((b[0] & BerBitMask.TAG_VALUE_BITS) == BerBitMask.TAG_VALUE_BITS) {
                 throw new AsnParseException(String.format("If bits 5 to 1 are set tag must not be only one byte long: %02X", b[0]));
             }
@@ -55,8 +51,6 @@ public final class BerUtils {
             value = b[0] & BerBitMask.TAG_VALUE_BITS;
 
         } else {
-            log.debug("BerTag has {} bytes", b.length);
-
             if ((b[0] & BerBitMask.TAG_VALUE_BITS) != BerBitMask.TAG_VALUE_BITS) {
                 throw new AsnParseException(String.format("For multibyte tags bits 5 to 1 of the first byte must be all set to 1: %s[%02X]", HexUtils.encode(b), b[0]));
             }
@@ -75,9 +69,7 @@ public final class BerUtils {
             }
         }
 
-        final BerTag tag = new BerTag(value, Type.fromCode(type), isConstructed);
-        log.debug("Read tag: {}", tag);
-        return tag;
+        return new BerTag(value, Type.fromCode(type), isConstructed);
     }
 
     public static int parseLength(final byte[] b) {

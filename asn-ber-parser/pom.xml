@@ -8,7 +8,7 @@
     <parent>
         <groupId>com.github.alturkovic</groupId>
         <artifactId>asn-parser</artifactId>
-        <version>1.2.0</version>
+        <version>1.2.1</version>
     </parent>
 
     <artifactId>asn-ber-parser</artifactId>
@@ -17,7 +17,7 @@
         <commons.codec.version>1.10</commons.codec.version>
         <commons.io.version>2.5</commons.io.version>
         <commons.lang.version>2.6</commons.lang.version>
-        <commons.lang3.version>3.6</commons.lang3.version>
+        <guava.version>22.0</guava.version>
     </properties>
 
     <dependencies>
@@ -25,10 +25,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
         </dependency>
 
         <dependency>
@@ -47,9 +43,9 @@
             <version>${commons.lang.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons.lang3.version}</version>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
         </dependency>
 
         <dependency>

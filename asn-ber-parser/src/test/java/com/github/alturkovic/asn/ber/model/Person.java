@@ -37,7 +37,7 @@ public class Person {
     private boolean male;
 
     @AsnPrimitive
-    private int age;
+    private Integer age;
 
     @AsnPrimitive(value = @AsnTag(0), asnConverter = HexStringConverter.class)
     private String phone;

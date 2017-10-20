@@ -34,7 +34,6 @@ import com.github.alturkovic.asn.tag.Tag;
 import com.github.alturkovic.asn.tag.TagFactory;
 import com.google.common.cache.Cache;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -42,7 +41,6 @@ import java.io.UncheckedIOException;
 import java.util.concurrent.ExecutionException;
 
 @Data
-@Slf4j
 public class BerEncoder implements AsnEncoder<byte[]> {
     private final TagFactory tagFactory;
     private final AsnAutoResolver autoResolver;
@@ -134,13 +132,10 @@ public class BerEncoder implements AsnEncoder<byte[]> {
     }
 
     private AsnConverter<byte[], ?> loadAsnConverterFromCache(final Class<? extends AsnConverter<byte[], ?>> asnConverterClass) {
-        final AsnConverter<byte[], ?> asnConverter;
         try {
-            asnConverter = converterCache.get(asnConverterClass, asnConverterClass::newInstance);
+            return converterCache.get(asnConverterClass, asnConverterClass::newInstance);
         } catch (final ExecutionException e) {
             throw new AsnConfigurationException(String.format("Cannot create a new instance of converter %s", asnConverterClass), e);
         }
-
-        return asnConverter;
     }
 }

@@ -19,12 +19,10 @@ package com.github.alturkovic.asn.ber.tlv;
 import com.github.alturkovic.asn.ber.util.BerUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;
 
 @Data
-@Slf4j
 @AllArgsConstructor
 public class BerDataReader implements TlvDataReader {
     private final BerTagReader tagReader;

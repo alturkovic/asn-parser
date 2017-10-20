@@ -40,7 +40,6 @@ import com.google.common.cache.Cache;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -50,7 +49,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Data
-@Slf4j
 public class BerDecoder implements AsnDecoder<byte[]>{
     private final TagFactory tagFactory;
     private final AsnAutoResolver autoResolver;
@@ -123,7 +121,7 @@ public class BerDecoder implements AsnDecoder<byte[]>{
 
                     decodeList(list, fieldTlvData.getValue(), (ListTaggedField) taggedField);
                 } else {
-                    log.error("Unsupported usage of taggedField {}", taggedField);
+                    throw new AsnDecodeException("Unknown TaggedField type: " + taggedField);
                 }
             }
 
@@ -169,14 +167,12 @@ public class BerDecoder implements AsnDecoder<byte[]>{
         }
     }
 
+    // TODO extract into loader or something and reuse in encoder (include in builders)
     private AsnConverter<byte[], ?> loadAsnConverterFromCache(final Class<? extends AsnConverter<byte[], ?>> asnConverterClass) {
-        final AsnConverter<byte[], ?> asnConverter;
         try {
-            asnConverter = converterCache.get(asnConverterClass, asnConverterClass::newInstance);
+            return converterCache.get(asnConverterClass, asnConverterClass::newInstance);
         } catch (final ExecutionException e) {
             throw new AsnConfigurationException(String.format("Cannot create a new instance of converter %s", asnConverterClass), e);
         }
-
-        return asnConverter;
     }
 }

@@ -17,14 +17,12 @@
 package com.github.alturkovic.asn.ber.tlv;
 
 import com.github.alturkovic.asn.ber.util.BerBitMask;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 
-@Slf4j
 public class BerLengthReader extends AbstractInputStreamReader {
 
     public byte[] read(final InputStream inputStream) {
@@ -36,8 +34,6 @@ public class BerLengthReader extends AbstractInputStreamReader {
         // if first byte has MSB set to 1
         // then bits 7-1 describe number of octets that represent length
         if (((byte) firstByte & BerBitMask.MOST_SIGNIFICANT_BIT) == BerBitMask.MOST_SIGNIFICANT_BIT) {
-            log.debug("Reading multiple bytes...");
-
             final int lengthOctetsRequired = (byte) firstByte & BerBitMask.NON_LEADING_BITS;
             final byte[] lengthOctets = readBytes(inputStream, lengthOctetsRequired);
 
@@ -48,8 +44,6 @@ public class BerLengthReader extends AbstractInputStreamReader {
             }
         }
 
-        final byte[] result = out.toByteArray();
-        log.debug("Read {} byte(s)", result.length);
-        return result;
+        return out.toByteArray();
     }
 }

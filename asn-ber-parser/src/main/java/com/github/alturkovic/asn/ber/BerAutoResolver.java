@@ -17,17 +17,20 @@
 package com.github.alturkovic.asn.ber;
 
 import com.github.alturkovic.asn.AsnAutoResolver;
-import com.github.alturkovic.asn.ber.converter.*;
-import com.github.alturkovic.asn.ber.tag.BerTag;
-import com.github.alturkovic.asn.converter.AutoConverter;
-import com.github.alturkovic.asn.tag.Tag;
 import com.github.alturkovic.asn.Type;
-import com.github.alturkovic.asn.annotation.AsnTag;
 import com.github.alturkovic.asn.UniversalTags;
+import com.github.alturkovic.asn.annotation.AsnTag;
+import com.github.alturkovic.asn.ber.converter.BooleanConverter;
+import com.github.alturkovic.asn.ber.converter.IntegerConverter;
+import com.github.alturkovic.asn.ber.converter.LongConverter;
+import com.github.alturkovic.asn.ber.converter.StringConverter;
+import com.github.alturkovic.asn.ber.tag.BerTag;
 import com.github.alturkovic.asn.converter.AsnConverter;
+import com.github.alturkovic.asn.converter.AutoConverter;
 import com.github.alturkovic.asn.exception.AsnConfigurationException;
+import com.github.alturkovic.asn.tag.Tag;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang.ClassUtils;
 
 public class BerAutoResolver implements AsnAutoResolver {
 
@@ -41,7 +44,7 @@ public class BerAutoResolver implements AsnAutoResolver {
             return StringConverter.class;
         }
 
-        final Class<?> clazz = ClassUtils.isPrimitiveWrapper(c) ? ClassUtils.wrapperToPrimitive(c) : c;
+        final Class<?> clazz = ClassUtils.primitiveToWrapper(c);
 
         final Mappings[] mappings = Mappings.values();
         for (final Mappings mapping : mappings) {
@@ -64,8 +67,7 @@ public class BerAutoResolver implements AsnAutoResolver {
             return new BerTag(Mappings.OCTET_STRING.value, Type.UNIVERSAL, constructed);
         }
 
-        final boolean isPrimitiveWrapper = ClassUtils.isPrimitiveWrapper(c);
-        final Class<?> clazz = isPrimitiveWrapper ? ClassUtils.wrapperToPrimitive(c) : c;
+        final Class<?> clazz = ClassUtils.primitiveToWrapper(c);
 
         Integer value = null;
         final Mappings[] mappings = Mappings.values();
@@ -90,9 +92,9 @@ public class BerAutoResolver implements AsnAutoResolver {
 
     @AllArgsConstructor
     private enum Mappings {
-        BOOLEAN(UniversalTags.BOOLEAN, boolean.class, BooleanConverter.class),
-        INTEGER(UniversalTags.INTEGER, int.class, IntegerConverter.class),
-        LONG(UniversalTags.INTEGER, long.class, LongConverter.class),
+        BOOLEAN(UniversalTags.BOOLEAN, Boolean.class, BooleanConverter.class),
+        INTEGER(UniversalTags.INTEGER, Integer.class, IntegerConverter.class),
+        LONG(UniversalTags.INTEGER, Long.class, LongConverter.class),
         BIT_STRING(UniversalTags.BIT_STRING, null, null), // not configured
         OCTET_STRING(UniversalTags.OCTET_STRING, byte[].class, AutoConverter.class),
         ENUMERATED(UniversalTags.ENUMERATED, null, null), // not configured

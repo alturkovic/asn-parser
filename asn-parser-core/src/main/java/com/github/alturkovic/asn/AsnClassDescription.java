@@ -28,20 +28,13 @@ import com.github.alturkovic.asn.field.StructureTaggedField;
 import com.github.alturkovic.asn.field.TaggedField;
 import com.github.alturkovic.asn.tag.Tag;
 import com.github.alturkovic.asn.tag.TagFactory;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.MultimapBuilder;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Getter;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
-@Data
 public class AsnClassDescription {
-    @Getter(AccessLevel.NONE)
-    private Multimap<Tag, TaggedField> multimap;
-
+    private Map<Tag, List<TaggedField>> multimap;
     private List<TaggedField> classOrderedTaggedFields;
 
     public AsnClassDescription(final TagFactory tagFactory, final AsnAutoResolver asnAutoResolver, final Class<?> clazz) {
@@ -49,7 +42,7 @@ public class AsnClassDescription {
     }
 
     private void init(final Class<?> clazz, final TagFactory tagFactory, final AsnAutoResolver asnAutoResolver) {
-        final Multimap<Tag, TaggedField> multimap = MultimapBuilder.treeKeys().arrayListValues().build();
+        multimap = new HashMap<>();
 
         int fieldPosition = 0;
         for (final Field field : clazz.getDeclaredFields()) {
@@ -81,21 +74,22 @@ public class AsnClassDescription {
             }
 
             if (tag != null && taggedField != null) {
-                multimap.put(tag, taggedField);
+                final List<TaggedField> listForTag = multimap.computeIfAbsent(tag, k -> new ArrayList<>());
+                listForTag.add(taggedField);
             }
 
             fieldPosition++;
         }
-
-        this.multimap = multimap;
     }
 
     // ensures that the order of class defined fields will be kept when encoding
     public List<TaggedField> getClassDeclaredOrderedTaggedFields() {
         if (classOrderedTaggedFields == null) {
-            final List<TaggedField> orderedTaggedFields = new ArrayList<>(multimap.values());
-            Collections.sort(orderedTaggedFields);
-            classOrderedTaggedFields = orderedTaggedFields;
+            classOrderedTaggedFields = multimap.values()
+                    .stream()
+                    .flatMap(Collection::stream)
+                    .sorted()
+                    .collect(Collectors.toList());
         }
 
         return classOrderedTaggedFields;
@@ -118,7 +112,7 @@ public class AsnClassDescription {
     }
 
     public TaggedField findByTag(final Tag tag, final int index) {
-        final List<TaggedField> taggedFields = (List<TaggedField>) multimap.get(tag);
+        final List<TaggedField> taggedFields = multimap.get(tag);
         if (taggedFields == null || taggedFields.size() == 0) {
             return null;
         }
