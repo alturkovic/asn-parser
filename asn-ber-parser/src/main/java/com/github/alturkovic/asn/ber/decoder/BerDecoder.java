@@ -21,6 +21,7 @@ import com.github.alturkovic.asn.AsnClassDescription;
 import com.github.alturkovic.asn.annotation.AsnPostProcessMethod;
 import com.github.alturkovic.asn.annotation.AsnStructure;
 import com.github.alturkovic.asn.annotation.AsnTag;
+import com.github.alturkovic.asn.ber.collection.MultiSet;
 import com.github.alturkovic.asn.ber.tlv.BerData;
 import com.github.alturkovic.asn.ber.tlv.TlvDataReader;
 import com.github.alturkovic.asn.ber.util.BerUtils;
@@ -36,9 +37,6 @@ import com.github.alturkovic.asn.field.TaggedField;
 import com.github.alturkovic.asn.field.accessor.FieldAccessor;
 import com.github.alturkovic.asn.tag.Tag;
 import com.github.alturkovic.asn.tag.TagFactory;
-import com.google.common.cache.Cache;
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.Multiset;
 import lombok.Data;
 
 import java.io.ByteArrayInputStream;
@@ -46,16 +44,16 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.Map;
 
 @Data
-public class BerDecoder implements AsnDecoder<byte[]>{
+public class BerDecoder implements AsnDecoder<byte[]> {
     private final TagFactory tagFactory;
     private final AsnAutoResolver autoResolver;
     private final FieldAccessor fieldAccessor;
     private final TlvDataReader tlvDataReader;
-    private final Cache<Class<?>, AsnClassDescription> classDescriptionCache;
-    private final Cache<Class<? extends AsnConverter<byte[], ?>>, AsnConverter<byte[], ?>> converterCache;
+    private final Map<Class<?>, AsnClassDescription> classDescriptionCache;
+    private final Map<Class<? extends AsnConverter<byte[], ?>>, AsnConverter<byte[], ?>> converterCache;
 
     @Override
     public <X> X decode(final Class<X> clazz, final byte[] data) {
@@ -75,7 +73,7 @@ public class BerDecoder implements AsnDecoder<byte[]>{
 
     private <X> X decodeStructure(final Class<X> clazz, final Tag structureTag, final byte[] data) {
         try {
-            final AsnClassDescription asnClassDescription = classDescriptionCache.get(clazz, () -> new AsnClassDescription(tagFactory, autoResolver, clazz));
+            final AsnClassDescription asnClassDescription = classDescriptionCache.computeIfAbsent(clazz, (aClass) -> new AsnClassDescription(tagFactory, autoResolver, aClass));
 
             final BerData tlvData = tlvDataReader.readNext(new ByteArrayInputStream(data));
             final Tag parsedMainTag = BerUtils.parseTag(tlvData.getTag());
@@ -87,7 +85,7 @@ public class BerDecoder implements AsnDecoder<byte[]>{
             final X instance = clazz.newInstance();
             final InputStream valueStream = new ByteArrayInputStream(tlvData.getValue());
 
-            final Multiset<Tag> tagCounter = HashMultiset.create();
+            final MultiSet<Tag> tagCounter = new MultiSet<>();
             while (valueStream.available() > 0) {
                 //Read element by element
                 final BerData fieldTlvData = tlvDataReader.readNext(valueStream);
@@ -167,12 +165,13 @@ public class BerDecoder implements AsnDecoder<byte[]>{
         }
     }
 
-    // TODO extract into loader or something and reuse in encoder (include in builders)
     private AsnConverter<byte[], ?> loadAsnConverterFromCache(final Class<? extends AsnConverter<byte[], ?>> asnConverterClass) {
-        try {
-            return converterCache.get(asnConverterClass, asnConverterClass::newInstance);
-        } catch (final ExecutionException e) {
-            throw new AsnConfigurationException(String.format("Cannot create a new instance of converter %s", asnConverterClass), e);
-        }
+        return converterCache.computeIfAbsent(asnConverterClass, (aClass) -> {
+            try {
+                return aClass.newInstance();
+            } catch (final InstantiationException | IllegalAccessException e) {
+                throw new AsnConfigurationException(String.format("Cannot create a new instance of converter %s", aClass), e);
+            }
+        });
     }
 }

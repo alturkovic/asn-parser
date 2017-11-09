@@ -17,8 +17,8 @@
 package com.github.alturkovic.asn.ber.tlv;
 
 import com.github.alturkovic.asn.exception.AsnReadException;
-import org.apache.commons.io.IOUtils;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -41,10 +41,15 @@ public abstract class AbstractInputStreamReader {
     }
 
     protected byte[] readBytes(final InputStream inputStream, final int bytesToRead) {
+        final byte[] result = new byte[bytesToRead];
+
+        final DataInputStream dis = new DataInputStream(inputStream);
         try {
-            return IOUtils.toByteArray(inputStream, bytesToRead);
+            dis.readFully(result);
         } catch (final IOException e) {
             throw new AsnReadException(e);
         }
+
+        return result;
     }
 }

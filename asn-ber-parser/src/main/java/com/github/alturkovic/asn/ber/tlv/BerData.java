@@ -19,7 +19,6 @@ package com.github.alturkovic.asn.ber.tlv;
 import com.github.alturkovic.asn.ber.util.HexUtils;
 import com.github.alturkovic.asn.exception.AsnDecodeException;
 import lombok.Data;
-import org.apache.commons.lang.ArrayUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -37,7 +36,7 @@ public class BerData {
     }
 
     public boolean isValuePresent() {
-        return !ArrayUtils.isEmpty(value);
+        return value != null && value.length > 0;
     }
 
     public byte[] toTlv() {

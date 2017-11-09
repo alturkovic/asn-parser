@@ -30,7 +30,6 @@ import com.github.alturkovic.asn.converter.AutoConverter;
 import com.github.alturkovic.asn.exception.AsnConfigurationException;
 import com.github.alturkovic.asn.tag.Tag;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang.ClassUtils;
 
 public class BerAutoResolver implements AsnAutoResolver {
 
@@ -39,17 +38,19 @@ public class BerAutoResolver implements AsnAutoResolver {
         if (c == null) {
             throw new AsnConfigurationException("Cannot get a converter for null class");
         }
+
         if (c == String.class) {
             // String has multiple tags that can represent it, just hardcode this one
             return StringConverter.class;
         }
 
-        final Class<?> clazz = ClassUtils.primitiveToWrapper(c);
-
-        final Mappings[] mappings = Mappings.values();
-        for (final Mappings mapping : mappings) {
-            if (mapping.clazz != null && mapping.clazz.equals(clazz)) {
-                return mapping.converterClass;
+        final Class<?> clazz = supportedWrapperToPrimitive(c);
+        if (clazz.isPrimitive() || clazz == byte[].class) {
+            final Mappings[] mappings = Mappings.values();
+            for (final Mappings mapping : mappings) {
+                if (mapping.clazz != null && mapping.clazz.equals(clazz)) {
+                    return mapping.converterClass;
+                }
             }
         }
 
@@ -67,14 +68,16 @@ public class BerAutoResolver implements AsnAutoResolver {
             return new BerTag(Mappings.OCTET_STRING.value, Type.UNIVERSAL, constructed);
         }
 
-        final Class<?> clazz = ClassUtils.primitiveToWrapper(c);
-
         Integer value = null;
-        final Mappings[] mappings = Mappings.values();
-        for (final Mappings mapping : mappings) {
-            if (mapping.clazz != null && mapping.clazz.equals(clazz)) {
-                value = mapping.value;
-                break;
+
+        final Class<?> clazz = supportedWrapperToPrimitive(c);
+        if (clazz.isPrimitive() || clazz == byte[].class) {
+            final Mappings[] mappings = Mappings.values();
+            for (final Mappings mapping : mappings) {
+                if (mapping.clazz != null && mapping.clazz.equals(clazz)) {
+                    value = mapping.value;
+                    break;
+                }
             }
         }
 
@@ -90,11 +93,27 @@ public class BerAutoResolver implements AsnAutoResolver {
         return asnTag.value() == -1;
     }
 
+    private Class<?> supportedWrapperToPrimitive(final Class<?> clazz) {
+        if (clazz == Integer.class) {
+            return int.class;
+        }
+
+        if (clazz == Long.class) {
+            return long.class;
+        }
+
+        if (clazz == Boolean.class) {
+            return boolean.class;
+        }
+
+        return clazz;
+    }
+
     @AllArgsConstructor
     private enum Mappings {
-        BOOLEAN(UniversalTags.BOOLEAN, Boolean.class, BooleanConverter.class),
-        INTEGER(UniversalTags.INTEGER, Integer.class, IntegerConverter.class),
-        LONG(UniversalTags.INTEGER, Long.class, LongConverter.class),
+        BOOLEAN(UniversalTags.BOOLEAN, boolean.class, BooleanConverter.class),
+        INTEGER(UniversalTags.INTEGER, int.class, IntegerConverter.class),
+        LONG(UniversalTags.INTEGER, long.class, LongConverter.class),
         BIT_STRING(UniversalTags.BIT_STRING, null, null), // not configured
         OCTET_STRING(UniversalTags.OCTET_STRING, byte[].class, AutoConverter.class),
         ENUMERATED(UniversalTags.ENUMERATED, null, null), // not configured

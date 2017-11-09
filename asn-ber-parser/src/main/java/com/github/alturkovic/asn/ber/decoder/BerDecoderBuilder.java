@@ -26,28 +26,20 @@ import com.github.alturkovic.asn.converter.AsnConverter;
 import com.github.alturkovic.asn.field.accessor.DirectFieldAccessor;
 import com.github.alturkovic.asn.field.accessor.FieldAccessor;
 import com.github.alturkovic.asn.tag.TagFactory;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import lombok.NoArgsConstructor;
 
+import java.util.HashMap;
+import java.util.Map;
+
+@NoArgsConstructor
 public class BerDecoderBuilder {
-    private static final int DEFAULT_CLASS_DESCRIPTION_SIZE = 64;
-    private static final int DEFAULT_CONVERTER_CACHE_SIZE = 64;
 
     private TagFactory tagFactory = new BerTagFactory();
     private AsnAutoResolver autoResolver = new BerAutoResolver();
     private FieldAccessor fieldAccessor = new DirectFieldAccessor();
     private TlvDataReader tlvDataReader = new BerDataReader();
-    private Cache<Class<?>, AsnClassDescription> classDescriptionCache;
-    private Cache<Class<? extends AsnConverter<byte[], ?>>, AsnConverter<byte[], ?>> converterCache;
-
-    public BerDecoderBuilder() {
-        this(DEFAULT_CLASS_DESCRIPTION_SIZE, DEFAULT_CONVERTER_CACHE_SIZE);
-    }
-
-    public BerDecoderBuilder(final int classCacheDescriptionSize, final int converterCacheSize) {
-        this.classDescriptionCache = CacheBuilder.newBuilder().maximumSize(classCacheDescriptionSize).build();
-        this.converterCache = CacheBuilder.newBuilder().maximumSize(converterCacheSize).build();
-    }
+    private Map<Class<?>, AsnClassDescription> classDescriptionCache = new HashMap<>();
+    private Map<Class<? extends AsnConverter<byte[], ?>>, AsnConverter<byte[], ?>> converterCache = new HashMap<>();
 
     public BerDecoderBuilder tagFactory(final TagFactory tagFactory) {
         this.tagFactory = tagFactory;
@@ -66,6 +58,16 @@ public class BerDecoderBuilder {
 
     public BerDecoderBuilder tlvDataReader(final TlvDataReader tlvDataReader) {
         this.tlvDataReader = tlvDataReader;
+        return this;
+    }
+
+    public BerDecoderBuilder classDescriptionCache(final Map<Class<?>, AsnClassDescription> classDescriptionCache) {
+        this.classDescriptionCache = classDescriptionCache;
+        return this;
+    }
+
+    public BerDecoderBuilder converterCache(final Map<Class<? extends AsnConverter<byte[], ?>>, AsnConverter<byte[], ?>> converterCache) {
+        this.converterCache = converterCache;
         return this;
     }
 

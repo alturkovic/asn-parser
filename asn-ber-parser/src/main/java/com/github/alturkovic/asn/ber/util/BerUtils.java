@@ -22,7 +22,6 @@ import com.github.alturkovic.asn.ber.tag.BerTag;
 import com.github.alturkovic.asn.exception.AsnParseException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang.ArrayUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -49,7 +48,6 @@ public final class BerUtils {
             }
 
             value = b[0] & BerBitMask.TAG_VALUE_BITS;
-
         } else {
             if ((b[0] & BerBitMask.TAG_VALUE_BITS) != BerBitMask.TAG_VALUE_BITS) {
                 throw new AsnParseException(String.format("For multibyte tags bits 5 to 1 of the first byte must be all set to 1: %s[%02X]", HexUtils.encode(b), b[0]));
@@ -115,7 +113,12 @@ public final class BerUtils {
             throw new AsnParseException(e);
         }
 
-        return ArrayUtils.add(raw, 0, (byte) (raw.length | BerBitMask.MOST_SIGNIFICANT_BIT));
+        // result should be the actual HEX representation of the length with the first byte
+        // being the length of the HEX, first byte is used to tell how many bytes to read
+        final byte[] result = new byte[raw.length + 1];
+        result[0] = (byte) (raw.length | BerBitMask.MOST_SIGNIFICANT_BIT);
+        System.arraycopy(raw, 0, result, 1, raw.length);
+        return result;
     }
 
     public static byte[] convert(final BerTag tag) {

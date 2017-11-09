@@ -16,10 +16,9 @@
 
 package com.github.alturkovic.asn.ber.params;
 
+import com.github.alturkovic.asn.ber.util.HexUtils;
 import junitparams.converters.ConversionFailedException;
 import junitparams.converters.Converter;
-
-import javax.xml.bind.DatatypeConverter;
 
 public class HexParamConverter implements Converter<HexParam, byte[]> {
 
@@ -29,7 +28,7 @@ public class HexParamConverter implements Converter<HexParam, byte[]> {
     @Override
     public byte[] convert(final Object param) throws ConversionFailedException {
         try {
-            return DatatypeConverter.parseHexBinary(String.valueOf(param));
+            return HexUtils.decode(String.valueOf(param));
         } catch (final RuntimeException e) {
             throw new ConversionFailedException(String.format("failed: %s", e));
         }

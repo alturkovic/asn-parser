@@ -32,21 +32,20 @@ import com.github.alturkovic.asn.field.TaggedField;
 import com.github.alturkovic.asn.field.accessor.FieldAccessor;
 import com.github.alturkovic.asn.tag.Tag;
 import com.github.alturkovic.asn.tag.TagFactory;
-import com.google.common.cache.Cache;
 import lombok.Data;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.concurrent.ExecutionException;
+import java.util.Map;
 
 @Data
 public class BerEncoder implements AsnEncoder<byte[]> {
     private final TagFactory tagFactory;
     private final AsnAutoResolver autoResolver;
     private final FieldAccessor fieldAccessor;
-    private final Cache<Class<?>, AsnClassDescription> classDescriptionCache;
-    private final Cache<Class<? extends AsnConverter<byte[], ?>>, AsnConverter<byte[], ?>> converterCache;
+    private final Map<Class<?>, AsnClassDescription> classDescriptionCache;
+    private final Map<Class<? extends AsnConverter<byte[], ?>>, AsnConverter<byte[], ?>> converterCache;
 
     @Override
     public byte[] encode(final Object object) {
@@ -65,7 +64,7 @@ public class BerEncoder implements AsnEncoder<byte[]> {
         final BerStructureBuilder berStructureBuilder;
         try {
             final Class<?> clazz = object.getClass();
-            final AsnClassDescription asnClassDescription = classDescriptionCache.get(clazz, () -> new AsnClassDescription(tagFactory, autoResolver, clazz));
+            final AsnClassDescription asnClassDescription = classDescriptionCache.computeIfAbsent(clazz, (aClass) -> new AsnClassDescription(tagFactory, autoResolver, aClass));
 
             berStructureBuilder = new BerStructureBuilder((BerTag) structureTag);
 
@@ -132,10 +131,12 @@ public class BerEncoder implements AsnEncoder<byte[]> {
     }
 
     private AsnConverter<byte[], ?> loadAsnConverterFromCache(final Class<? extends AsnConverter<byte[], ?>> asnConverterClass) {
-        try {
-            return converterCache.get(asnConverterClass, asnConverterClass::newInstance);
-        } catch (final ExecutionException e) {
-            throw new AsnConfigurationException(String.format("Cannot create a new instance of converter %s", asnConverterClass), e);
-        }
+        return converterCache.computeIfAbsent(asnConverterClass, (aClass) -> {
+            try {
+                return aClass.newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw new AsnConfigurationException(String.format("Cannot create a new instance of converter %s", aClass), e);
+            }
+        });
     }
 }
