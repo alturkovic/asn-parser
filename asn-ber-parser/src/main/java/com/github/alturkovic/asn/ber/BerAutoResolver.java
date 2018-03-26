@@ -20,10 +20,7 @@ import com.github.alturkovic.asn.AsnAutoResolver;
 import com.github.alturkovic.asn.Type;
 import com.github.alturkovic.asn.UniversalTags;
 import com.github.alturkovic.asn.annotation.AsnTag;
-import com.github.alturkovic.asn.ber.converter.BooleanConverter;
-import com.github.alturkovic.asn.ber.converter.IntegerConverter;
-import com.github.alturkovic.asn.ber.converter.LongConverter;
-import com.github.alturkovic.asn.ber.converter.StringConverter;
+import com.github.alturkovic.asn.ber.converter.*;
 import com.github.alturkovic.asn.ber.tag.BerTag;
 import com.github.alturkovic.asn.converter.AsnConverter;
 import com.github.alturkovic.asn.converter.AutoConverter;
@@ -41,7 +38,7 @@ public class BerAutoResolver implements AsnAutoResolver {
 
         if (c == String.class) {
             // String has multiple tags that can represent it, just hardcode this one
-            return StringConverter.class;
+            return Utf8StringConverter.class;
         }
 
         final Class<?> clazz = supportedWrapperToPrimitive(c);
@@ -117,21 +114,21 @@ public class BerAutoResolver implements AsnAutoResolver {
         BIT_STRING(UniversalTags.BIT_STRING, null, null), // not configured
         OCTET_STRING(UniversalTags.OCTET_STRING, byte[].class, AutoConverter.class),
         ENUMERATED(UniversalTags.ENUMERATED, null, null), // not configured
-        UTF8_STRING(UniversalTags.UTF8_STRING, String.class, StringConverter.class),
+        UTF8_STRING(UniversalTags.UTF8_STRING, String.class, Utf8StringConverter.class),
         SEQUENCE(UniversalTags.SEQUENCE, null, null), // not configured
-        NUMERIC_STRING(UniversalTags.NUMERIC_STRING, String.class, StringConverter.class),
-        PRINTABLE_STRING(UniversalTags.PRINTABLE_STRING, String.class, StringConverter.class),
-        TELETEX_STRING(UniversalTags.TELETEX_STRING, String.class, StringConverter.class),
-        VIDEOTEX_STRING(UniversalTags.VIDEOTEX_STRING, String.class, StringConverter.class),
-        IA5_STRING(UniversalTags.IA5_STRING, String.class, StringConverter.class),
+        NUMERIC_STRING(UniversalTags.NUMERIC_STRING, String.class, Utf8StringConverter.class),
+        PRINTABLE_STRING(UniversalTags.PRINTABLE_STRING, String.class, Utf8StringConverter.class),
+        TELETEX_STRING(UniversalTags.TELETEX_STRING, String.class, Utf8StringConverter.class),
+        VIDEOTEX_STRING(UniversalTags.VIDEOTEX_STRING, String.class, Utf8StringConverter.class),
+        IA5_STRING(UniversalTags.IA5_STRING, String.class, AsciiStringConverter.class),
         UTC_TIME(UniversalTags.UTC_TIME, null, null), // not configured
         GENERALIZED_TIME(UniversalTags.GENERALIZED_TIME, null, null), // not configured
-        GRAPHIC_STRING(UniversalTags.GRAPHIC_STRING, String.class, StringConverter.class),
-        VISIBLE_STRING(UniversalTags.VISIBLE_STRING, String.class, StringConverter.class),
-        GENERAL_STRING(UniversalTags.GENERAL_STRING, String.class, StringConverter.class),
-        UNIVERSAL_STRING(UniversalTags.UNIVERSAL_STRING, String.class, StringConverter.class),
-        BITMAP_STRING(UniversalTags.BITMAP_STRING, String.class, StringConverter.class),
-        CHARACTER_STRING(UniversalTags.CHARACTER_STRING, String.class, StringConverter.class);
+        GRAPHIC_STRING(UniversalTags.GRAPHIC_STRING, String.class, Utf8StringConverter.class),
+        VISIBLE_STRING(UniversalTags.VISIBLE_STRING, String.class, AsciiStringConverter.class),
+        GENERAL_STRING(UniversalTags.GENERAL_STRING, String.class, Utf8StringConverter.class),
+        UNIVERSAL_STRING(UniversalTags.UNIVERSAL_STRING, String.class, Utf8StringConverter.class),
+        BITMAP_STRING(UniversalTags.BITMAP_STRING, String.class, Utf8StringConverter.class),
+        CHARACTER_STRING(UniversalTags.CHARACTER_STRING, String.class, Utf8StringConverter.class);
 
         private final int value;
         private final Class<?> clazz;

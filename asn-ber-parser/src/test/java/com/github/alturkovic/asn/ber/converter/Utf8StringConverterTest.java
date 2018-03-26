@@ -27,15 +27,16 @@ import org.junit.runner.RunWith;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(JUnitParamsRunner.class)
-public class StringConverterTest {
+public class Utf8StringConverterTest {
 
-    private final AsnConverter<byte[], String> converter = new StringConverter();
+    private final AsnConverter<byte[], String> converter = new Utf8StringConverter();
 
     // Decoding
 
     @Test
     @Parameters({
             "746573742e61706e, test.apn",
+            "7465737431407273612e636f6d, test1@rsa.com",
             "48412f22235444414b2223727438, HA/\"#TDAK\"#rt8",
             "253d28262f2923282f2634234a2824263b5f3a40, %=(&/)#(/&4#J($&;_:@",
             "67333938666737293a5f6566613a3b284624472f244647284648, g398fg7):_efa:;(F$G/$FG(FH"
@@ -57,6 +58,7 @@ public class StringConverterTest {
             "Shell, 5368656c6c",
             "John Doe, 4a6f686e20446f65",
             "test.apn, 746573742e61706e",
+            "test1@rsa.com, 7465737431407273612e636f6d",
             "Hello world, 48656c6c6f20776f726c64",
             "HA/\"#TDAK\"#rt8, 48412f22235444414b2223727438",
             "%=(&/)#(/&4#J($&;_:@, 253d28262f2923282f2634234a2824263b5f3a40",

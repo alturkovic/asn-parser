@@ -18,7 +18,7 @@ package com.github.alturkovic.asn.ber.converter;
 
 import com.github.alturkovic.asn.converter.AsnConverter;
 
-public class StringConverter implements AsnConverter<byte[], String> {
+public class Utf8StringConverter implements AsnConverter<byte[], String> {
 
     @Override
     public String decode(final byte[] data) {
