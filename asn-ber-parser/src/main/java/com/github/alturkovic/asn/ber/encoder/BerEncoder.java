@@ -100,6 +100,10 @@ public class BerEncoder implements AsnEncoder<byte[]> {
                     //noinspection unchecked
                     final Collection<Object> collection = fieldAccessor.getFieldValue(object, taggedField.getField());
 
+                    if (collection == null) {
+                        continue;
+                    }
+
                     final BerStructureBuilder collectionBuilder = new BerStructureBuilder((BerTag) listTaggedField.getTag());
 
                     if (listTaggedField.isStructured()) {
