@@ -26,6 +26,8 @@ package com.github.alturkovic.asn.ber.converter;
 
 import com.github.alturkovic.asn.converter.AsnConverter;
 
+import java.nio.charset.StandardCharsets;
+
 public class Utf8StringConverter implements AsnConverter<byte[], String> {
 
     @Override
@@ -34,7 +36,7 @@ public class Utf8StringConverter implements AsnConverter<byte[], String> {
             return null;
         }
 
-        return new String(data);
+        return new String(data, StandardCharsets.UTF_8);
     }
 
     @Override
@@ -43,6 +45,6 @@ public class Utf8StringConverter implements AsnConverter<byte[], String> {
             return null;
         }
 
-        return data.getBytes();
+        return data.getBytes(StandardCharsets.UTF_8);
     }
 }
