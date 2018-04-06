@@ -1,32 +1,42 @@
 /*
- * Copyright (c)  2017 Alen Turković <alturkovic@gmail.com>
+ * MIT License
  *
- * Permission to use, copy, modify, and distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
+ * Copyright (c) 2018 Alen Turkovic
  *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
- * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 package com.github.alturkovic.asn.ber.model;
 
 import com.github.alturkovic.asn.Type;
-import com.github.alturkovic.asn.annotation.AsnPostProcessMethod;
-import com.github.alturkovic.asn.annotation.AsnPrimitive;
-import com.github.alturkovic.asn.annotation.AsnStructure;
-import com.github.alturkovic.asn.annotation.AsnTag;
+import com.github.alturkovic.asn.annotation.*;
 import com.github.alturkovic.asn.ber.converter.HexStringConverter;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.Set;
+
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @AsnPostProcessMethod("postDecode")
@@ -39,15 +49,18 @@ public class Person {
     @AsnPrimitive
     private Integer age;
 
-    @AsnPrimitive(value = @AsnTag(0), asnConverter = HexStringConverter.class)
-    private String phone;
+    @AsnCollection(elementTag = @AsnTag(5), structured = false, asnConverter = HexStringConverter.class, type = String.class)
+    private Set<String> phones;
+
+    @AsnCollection(value = @AsnTag(1), asnConverter = HexStringConverter.class, type = Address.class)
+    private List<Address> addresses;
 
     private boolean adult;
 
-    public Person(final boolean male, final int age, final String phone) {
+    public Person(final boolean male, final int age, final Set<String> phones) {
         this.male = male;
         this.age = age;
-        this.phone = phone;
+        this.phones = phones;
     }
 
     private void postDecode() {

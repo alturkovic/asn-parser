@@ -1,53 +1,64 @@
 /*
- * Copyright (c)  2017 Alen Turković <alturkovic@gmail.com>
+ * MIT License
  *
- * Permission to use, copy, modify, and distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
+ * Copyright (c) 2018 Alen Turkovic
  *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
- * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 package com.github.alturkovic.asn.ber.decoder;
 
-import com.github.alturkovic.asn.ber.model.AddressString;
-import com.github.alturkovic.asn.ber.model.BerExampleProvider;
-import com.github.alturkovic.asn.ber.model.MultipleAddressStringWrapper;
-import com.github.alturkovic.asn.ber.params.HexParam;
+import com.github.alturkovic.asn.ber.model.Address;
+import com.github.alturkovic.asn.ber.model.MultipleAddressWrapper;
+import com.github.alturkovic.asn.ber.model.Person;
 import com.github.alturkovic.asn.ber.util.HexUtils;
 import com.github.alturkovic.asn.decoder.AsnDecoder;
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-import junitparams.naming.TestCaseName;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
+import java.util.HashSet;
+
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(JUnitParamsRunner.class)
 public class BerDecoderTest {
 
     private final AsnDecoder<byte[]> decoder = new BerDecoderBuilder().build();
 
     @Test
-    @TestCaseName("[{index}] decode: ({0})")
-    @Parameters(source = BerExampleProvider.class)
-    public void shouldDecode(final Object obj, @HexParam final byte[] ber) {
-        final Object decoded = decoder.decode(obj.getClass(), ber);
-        assertThat(decoded).isEqualTo(obj);
+    public void shouldDecodePersonExample() {
+        final byte[] ber = HexUtils.decode("F0390101FF020118311085063859980690038506385998069002A11F300D040546697273740201018201FF300E04065365636F6E64020102820100");
+        final Person decoded = decoder.decode(Person.class, ber);
+
+        assertThat(decoded).isEqualTo(Person.builder()
+                .male(true)
+                .age(24)
+                .adult(true)
+                .phones(new HashSet<>(asList("385998069002", "385998069003")))
+                .addresses(asList(new Address("First", 1, true), new Address("Second", 2, false)))
+                .build());
     }
 
     @Test
     public void shouldDecodeMultipleAddressStingsAndDiscardTheExtraOne() {
         final byte[] encoded = HexUtils.decode("302aa40c0201010404616472318201ffa40c020102040461647232820100a40c020103040461647233820100");
-        final MultipleAddressStringWrapper decoded = decoder.decode(MultipleAddressStringWrapper.class, encoded);
-        assertThat(decoded.getAddressOne()).isEqualTo(new AddressString(1, "adr1", true));
-        assertThat(decoded.getAddressTwo()).isEqualTo(new AddressString(2, "adr2", false));
+        final MultipleAddressWrapper decoded = decoder.decode(MultipleAddressWrapper.class, encoded);
+        assertThat(decoded.getAddressOne()).isEqualTo(new Address("adr1", 1, true));
+        assertThat(decoded.getAddressTwo()).isEqualTo(new Address("adr2", 2, false));
     }
 }

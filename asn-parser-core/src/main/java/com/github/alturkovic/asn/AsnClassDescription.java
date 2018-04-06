@@ -1,28 +1,36 @@
 /*
- * Copyright (c)  2017 Alen Turković <alturkovic@gmail.com>
+ * MIT License
  *
- * Permission to use, copy, modify, and distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
+ * Copyright (c) 2018 Alen Turkovic
  *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
- * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 package com.github.alturkovic.asn;
 
-import com.github.alturkovic.asn.annotation.AsnList;
+import com.github.alturkovic.asn.annotation.AsnCollection;
 import com.github.alturkovic.asn.annotation.AsnPrimitive;
 import com.github.alturkovic.asn.annotation.AsnStructure;
 import com.github.alturkovic.asn.annotation.AsnTag;
 import com.github.alturkovic.asn.converter.AsnConverter;
 import com.github.alturkovic.asn.converter.AutoConverter;
-import com.github.alturkovic.asn.field.ListTaggedField;
+import com.github.alturkovic.asn.field.CollectionTaggedField;
 import com.github.alturkovic.asn.field.PrimitiveTaggedField;
 import com.github.alturkovic.asn.field.StructureTaggedField;
 import com.github.alturkovic.asn.field.TaggedField;
@@ -63,14 +71,16 @@ public class AsnClassDescription {
 
                 tag = getTag(tagFactory, asnAutoResolver, asnTag, field.getType(), true);
                 taggedField = new StructureTaggedField(fieldPosition, tag, field);
-            } else if (field.isAnnotationPresent(AsnList.class)) {
-                final AsnList listTag = field.getAnnotation(AsnList.class);
-                final AsnTag asnTag = listTag.value();
+            } else if (field.isAnnotationPresent(AsnCollection.class)) {
+                final AsnCollection collectionTag = field.getAnnotation(AsnCollection.class);
+                final AsnTag asnTag = collectionTag.value();
 
-                final Class<? extends AsnConverter<?, ?>> converter = listTag.structured() ? null : getConverter(asnAutoResolver, listTag.asnConverter(), listTag.type());
+                final Class<? extends AsnConverter<?, ?>> converter = collectionTag.structured() ? null : getConverter(asnAutoResolver, collectionTag.asnConverter(), collectionTag.type());
 
                 tag = getTag(tagFactory, asnAutoResolver, asnTag, field.getType(), true);
-                taggedField = new ListTaggedField(fieldPosition, tag, field, listTag.structured(), listTag.type(), converter);
+                final Tag elementTag = getTag(tagFactory, asnAutoResolver, collectionTag.elementTag(), collectionTag.type(), collectionTag.structured());
+
+                taggedField = new CollectionTaggedField(fieldPosition, tag, field, collectionTag.structured(), collectionTag.type(), elementTag, converter);
             }
 
             if (tag != null && taggedField != null) {

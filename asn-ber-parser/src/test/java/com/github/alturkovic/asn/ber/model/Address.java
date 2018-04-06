@@ -22,33 +22,25 @@
  * SOFTWARE.
  */
 
-package com.github.alturkovic.asn.field;
+package com.github.alturkovic.asn.ber.model;
 
-import com.github.alturkovic.asn.tag.Tag;
+import com.github.alturkovic.asn.annotation.AsnPrimitive;
+import com.github.alturkovic.asn.annotation.AsnTag;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.lang.reflect.Field;
+import lombok.NoArgsConstructor;
 
 @Data
-public abstract class TaggedField implements Comparable<TaggedField> {
-    private final int fieldPosition; // helps keep the class defined order when encoding
-    private final Tag tag;
-    private final Field field;
+@NoArgsConstructor
+@AllArgsConstructor
+public class Address {
 
-    public boolean isPrimitive() {
-        return false;
-    }
+    @AsnPrimitive
+    private String street;
 
-    public boolean isStructure() {
-        return false;
-    }
+    @AsnPrimitive
+    private int number;
 
-    public boolean isCollection() {
-        return false;
-    }
-
-    @Override
-    public int compareTo(final TaggedField tf) {
-        return this.fieldPosition > tf.fieldPosition ? 1 : -1;
-    }
+    @AsnPrimitive(@AsnTag(2))
+    private boolean enabled;
 }

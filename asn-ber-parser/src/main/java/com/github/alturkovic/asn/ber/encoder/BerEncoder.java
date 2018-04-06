@@ -1,17 +1,25 @@
 /*
- * Copyright (c)  2017 Alen Turković <alturkovic@gmail.com>
+ * MIT License
  *
- * Permission to use, copy, modify, and distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
+ * Copyright (c) 2018 Alen Turkovic
  *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
- * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 package com.github.alturkovic.asn.ber.encoder;
@@ -27,6 +35,7 @@ import com.github.alturkovic.asn.converter.AsnConverter;
 import com.github.alturkovic.asn.encoder.AsnEncoder;
 import com.github.alturkovic.asn.exception.AsnConfigurationException;
 import com.github.alturkovic.asn.exception.AsnEncodeException;
+import com.github.alturkovic.asn.field.CollectionTaggedField;
 import com.github.alturkovic.asn.field.PrimitiveTaggedField;
 import com.github.alturkovic.asn.field.TaggedField;
 import com.github.alturkovic.asn.field.accessor.FieldAccessor;
@@ -37,6 +46,7 @@ import lombok.Data;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.Collection;
 import java.util.Map;
 
 @Data
@@ -45,7 +55,7 @@ public class BerEncoder implements AsnEncoder<byte[]> {
     private final AsnAutoResolver autoResolver;
     private final FieldAccessor fieldAccessor;
     private final Map<Class<?>, AsnClassDescription> classDescriptionCache;
-    private final Map<Class<? extends AsnConverter<byte[], ?>>, AsnConverter<byte[], ?>> converterCache;
+    private final Map<Class<? extends AsnConverter<byte[], Object>>, AsnConverter<byte[], Object>> converterCache;
 
     @Override
     public byte[] encode(final Object object) {
@@ -84,9 +94,26 @@ public class BerEncoder implements AsnEncoder<byte[]> {
                     }
 
                     encoded = encodeStructure(fieldValue, taggedField.getTag());
-                } else if (taggedField.isList()) {
-                    //TODO
-                    encoded = null;
+                } else if (taggedField.isCollection()) {
+                    final CollectionTaggedField listTaggedField = (CollectionTaggedField) taggedField;
+
+                    //noinspection unchecked
+                    final Collection<Object> collection = fieldAccessor.getFieldValue(object, taggedField.getField());
+
+                    final BerStructureBuilder collectionBuilder = new BerStructureBuilder((BerTag) listTaggedField.getTag());
+
+                    if (listTaggedField.isStructured()) {
+                        collection.forEach(e -> collectionBuilder.addValue(encodeStructure(e, listTaggedField.getElementTag())));
+                    } else {
+                        collection.forEach(e -> {
+                            //noinspection unchecked
+                            final AsnConverter<byte[], Object> asnConverter = loadAsnConverterFromCache((Class<? extends AsnConverter<byte[], Object>>) listTaggedField.getConverter());
+                            final byte[] encodedFieldValue = asnConverter.encode(e);
+                            collectionBuilder.addValue(encodePrimitive(listTaggedField.getElementTag(), encodedFieldValue));
+                        });
+                    }
+
+                    encoded = collectionBuilder.build();
                 } else {
                     continue;
                 }
@@ -100,10 +127,10 @@ public class BerEncoder implements AsnEncoder<byte[]> {
         return berStructureBuilder.build();
     }
 
-    private byte[] encodePrimitive(final Object object, final PrimitiveTaggedField taggedField) throws Exception {
+    private byte[] encodePrimitive(final Object object, final PrimitiveTaggedField taggedField) {
         try {
             //noinspection unchecked
-            final AsnConverter<byte[], ?> asnConverter = loadAsnConverterFromCache((Class<? extends AsnConverter<byte[], ?>>) taggedField.getConverter());
+            final AsnConverter<byte[], Object> asnConverter = loadAsnConverterFromCache((Class<? extends AsnConverter<byte[], Object>>) taggedField.getConverter());
             final byte[] encodedFieldValue = asnConverter.encode(fieldAccessor.getFieldValue(object, taggedField.getField()));
 
             if (encodedFieldValue == null) {
@@ -130,7 +157,7 @@ public class BerEncoder implements AsnEncoder<byte[]> {
         }
     }
 
-    private AsnConverter<byte[], ?> loadAsnConverterFromCache(final Class<? extends AsnConverter<byte[], ?>> asnConverterClass) {
+    private AsnConverter<byte[], Object> loadAsnConverterFromCache(final Class<? extends AsnConverter<byte[], Object>> asnConverterClass) {
         return converterCache.computeIfAbsent(asnConverterClass, (aClass) -> {
             try {
                 return aClass.newInstance();

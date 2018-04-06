@@ -22,33 +22,26 @@
  * SOFTWARE.
  */
 
-package com.github.alturkovic.asn.field;
+package com.github.alturkovic.asn.annotation;
 
-import com.github.alturkovic.asn.tag.Tag;
-import lombok.Data;
+import com.github.alturkovic.asn.converter.AsnConverter;
+import com.github.alturkovic.asn.converter.AutoConverter;
 
-import java.lang.reflect.Field;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@Data
-public abstract class TaggedField implements Comparable<TaggedField> {
-    private final int fieldPosition; // helps keep the class defined order when encoding
-    private final Tag tag;
-    private final Field field;
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface AsnCollection {
+    AsnTag value() default @AsnTag;
 
-    public boolean isPrimitive() {
-        return false;
-    }
+    AsnTag elementTag() default @AsnTag;
 
-    public boolean isStructure() {
-        return false;
-    }
+    boolean structured() default true;
 
-    public boolean isCollection() {
-        return false;
-    }
+    Class<?> type();
 
-    @Override
-    public int compareTo(final TaggedField tf) {
-        return this.fieldPosition > tf.fieldPosition ? 1 : -1;
-    }
+    Class<? extends AsnConverter<?, ?>> asnConverter() default AutoConverter.class;
 }

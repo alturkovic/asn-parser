@@ -1,17 +1,25 @@
 /*
- * Copyright (c)  2017 Alen Turković <alturkovic@gmail.com>
+ * MIT License
  *
- * Permission to use, copy, modify, and distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
+ * Copyright (c) 2018 Alen Turkovic
  *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
- * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 package com.github.alturkovic.asn.ber.decoder;
@@ -31,7 +39,7 @@ import com.github.alturkovic.asn.decoder.AsnDecoder;
 import com.github.alturkovic.asn.exception.AsnConfigurationException;
 import com.github.alturkovic.asn.exception.AsnDecodeException;
 import com.github.alturkovic.asn.exception.AsnException;
-import com.github.alturkovic.asn.field.ListTaggedField;
+import com.github.alturkovic.asn.field.CollectionTaggedField;
 import com.github.alturkovic.asn.field.PrimitiveTaggedField;
 import com.github.alturkovic.asn.field.TaggedField;
 import com.github.alturkovic.asn.field.accessor.FieldAccessor;
@@ -42,9 +50,7 @@ import lombok.Data;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Data
 public class BerDecoder implements AsnDecoder<byte[]> {
@@ -53,7 +59,7 @@ public class BerDecoder implements AsnDecoder<byte[]> {
     private final FieldAccessor fieldAccessor;
     private final TlvDataReader tlvDataReader;
     private final Map<Class<?>, AsnClassDescription> classDescriptionCache;
-    private final Map<Class<? extends AsnConverter<byte[], ?>>, AsnConverter<byte[], ?>> converterCache;
+    private final Map<Class<? extends AsnConverter<byte[], Object>>, AsnConverter<byte[], Object>> converterCache;
 
     @Override
     public <X> X decode(final Class<X> clazz, final byte[] data) {
@@ -104,7 +110,7 @@ public class BerDecoder implements AsnDecoder<byte[]> {
 
                 if (taggedField.isPrimitive()) {
                     //noinspection unchecked
-                    final AsnConverter<byte[], ?> asnConverter = loadAsnConverterFromCache((Class<? extends AsnConverter<byte[], ?>>) ((PrimitiveTaggedField) taggedField).getConverter());
+                    final AsnConverter<byte[], Object> asnConverter = loadAsnConverterFromCache((Class<? extends AsnConverter<byte[], Object>>) ((PrimitiveTaggedField) taggedField).getConverter());
 
                     try {
                         fieldAccessor.setFieldValue(instance, taggedField.getField(), asnConverter.decode(fieldTlvData.getValue()));
@@ -113,11 +119,22 @@ public class BerDecoder implements AsnDecoder<byte[]> {
                     }
                 } else if (taggedField.isStructure()) {
                     fieldAccessor.setFieldValue(instance, taggedField.getField(), decodeStructure(taggedField.getField().getType(), taggedField.getTag(), fieldTlvData.toTlv()));
-                } else if (taggedField.isList()) {
-                    final List<Object> list = new ArrayList<>();
-                    fieldAccessor.setFieldValue(instance, taggedField.getField(), list);
+                } else if (taggedField.isCollection()) {
+                    final Class<?> fieldClass = taggedField.getField().getType();
 
-                    decodeList(list, fieldTlvData.getValue(), (ListTaggedField) taggedField);
+                    final Collection<Object> collection;
+
+                    if (fieldClass.isAssignableFrom(List.class)) {
+                        collection = new ArrayList<>();
+                    } else if (fieldClass.isAssignableFrom(Set.class)) {
+                        collection = new HashSet<>();
+                    } else {
+                        throw new AsnDecodeException(String.format("Unsupported collection type: '%s'. Only List and Set supported!", fieldClass));
+                    }
+
+                    fieldAccessor.setFieldValue(instance, taggedField.getField(), collection);
+
+                    decodeCollection(collection, fieldTlvData.getValue(), (CollectionTaggedField) taggedField);
                 } else {
                     throw new AsnDecodeException("Unknown TaggedField type: " + taggedField);
                 }
@@ -139,33 +156,33 @@ public class BerDecoder implements AsnDecoder<byte[]> {
         }
     }
 
-    private void decodeList(final List<Object> list, final byte[] listValueData, final ListTaggedField taggedField) {
+    private void decodeCollection(final Collection<Object> collection, final byte[] elementData, final CollectionTaggedField taggedField) {
         try {
-            final InputStream listStream = new ByteArrayInputStream(listValueData);
-            while (listStream.available() > 0) {
-                final BerData listElementTlv = tlvDataReader.readNext(listStream);
-                final Tag parsedListElementTag = BerUtils.parseTag(listElementTlv.getTag());
-                if (BerUtils.UNIVERSAL_TAG.equals(parsedListElementTag)) {
+            final InputStream stream = new ByteArrayInputStream(elementData);
+            while (stream.available() > 0) {
+                final BerData elementBerData = tlvDataReader.readNext(stream);
+                final Tag parsedElementTag = BerUtils.parseTag(elementBerData.getTag());
+                if (taggedField.getElementTag().equals(parsedElementTag)) {
                     if (taggedField.isStructured()) {
-                        final Object listObject = decodeStructure(taggedField.getType(), BerUtils.UNIVERSAL_TAG, listElementTlv.toTlv());
-                        list.add(listObject);
+                        final Object element = decodeStructure(taggedField.getType(), BerUtils.UNIVERSAL_TAG, elementBerData.toTlv());
+                        collection.add(element);
                     } else {
                         //noinspection unchecked
-                        final AsnConverter<byte[], ?> asnConverter = loadAsnConverterFromCache((Class<? extends AsnConverter<byte[], ?>>) taggedField.getConverter());
+                        final AsnConverter<byte[], Object> asnConverter = loadAsnConverterFromCache((Class<? extends AsnConverter<byte[], Object>>) taggedField.getConverter());
                         try {
-                            list.add(asnConverter.decode(listElementTlv.toTlv()));
+                            collection.add(asnConverter.decode(elementBerData.getValue()));
                         } catch (final AsnException e) {
-                            throw new AsnDecodeException(String.format("Cannot add primitive value '%s' to list '%s'", HexUtils.encode(listElementTlv.toTlv()), taggedField.getField().getName()), e);
+                            throw new AsnDecodeException(String.format("Cannot add primitive value '%s' to collection '%s'", HexUtils.encode(elementBerData.getValue()), taggedField.getField().getName()), e);
                         }
                     }
                 }
             }
         } catch (final Exception e) {
-            throw new AsnDecodeException(String.format("Cannot decode list data '%s' into '%s' class", HexUtils.encode(listValueData), taggedField.getType().getName()), e);
+            throw new AsnDecodeException(String.format("Cannot decode collection data '%s' into '%s' class", HexUtils.encode(elementData), taggedField.getType().getName()), e);
         }
     }
 
-    private AsnConverter<byte[], ?> loadAsnConverterFromCache(final Class<? extends AsnConverter<byte[], ?>> asnConverterClass) {
+    private AsnConverter<byte[], Object> loadAsnConverterFromCache(final Class<? extends AsnConverter<byte[], Object>> asnConverterClass) {
         return converterCache.computeIfAbsent(asnConverterClass, (aClass) -> {
             try {
                 return aClass.newInstance();
