@@ -52,7 +52,7 @@ public class Person {
     @AsnCollection(elementTag = @AsnTag(5), structured = false, asnConverter = HexStringConverter.class, type = String.class)
     private Set<String> phones;
 
-    @AsnCollection(value = @AsnTag(1), asnConverter = HexStringConverter.class, type = Address.class)
+    @AsnCollection(value = @AsnTag(1), type = Address.class)
     private List<Address> addresses;
 
     private boolean adult;
