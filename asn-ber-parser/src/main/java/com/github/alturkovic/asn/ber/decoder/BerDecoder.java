@@ -95,9 +95,6 @@ public class BerDecoder implements AsnDecoder<byte[]> {
             while (valueStream.available() > 0) {
                 //Read element by element
                 final BerData fieldTlvData = tlvDataReader.readNext(valueStream);
-                if (!fieldTlvData.isValuePresent()) {
-                    continue;
-                }
 
                 final Tag parsedFieldTag = BerUtils.parseTag(fieldTlvData.getTag());
                 final int index = tagCounter.count(parsedFieldTag);

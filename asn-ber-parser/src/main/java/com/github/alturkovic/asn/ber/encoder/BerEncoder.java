@@ -95,7 +95,7 @@ public class BerEncoder implements AsnEncoder<byte[]> {
 
                     encoded = encodeStructure(fieldValue, taggedField.getTag());
                 } else if (taggedField.isCollection()) {
-                    final CollectionTaggedField listTaggedField = (CollectionTaggedField) taggedField;
+                    final CollectionTaggedField collectionTaggedField = (CollectionTaggedField) taggedField;
 
                     //noinspection unchecked
                     final Collection<Object> collection = fieldAccessor.getFieldValue(object, taggedField.getField());
@@ -104,16 +104,16 @@ public class BerEncoder implements AsnEncoder<byte[]> {
                         continue;
                     }
 
-                    final BerStructureBuilder collectionBuilder = new BerStructureBuilder((BerTag) listTaggedField.getTag());
+                    final BerStructureBuilder collectionBuilder = new BerStructureBuilder((BerTag) collectionTaggedField.getTag());
 
-                    if (listTaggedField.isStructured()) {
-                        collection.forEach(e -> collectionBuilder.addValue(encodeStructure(e, listTaggedField.getElementTag())));
+                    if (collectionTaggedField.isStructured()) {
+                        collection.forEach(e -> collectionBuilder.addValue(encodeStructure(e, collectionTaggedField.getElementTag())));
                     } else {
                         collection.forEach(e -> {
                             //noinspection unchecked
-                            final AsnConverter<byte[], Object> asnConverter = loadAsnConverterFromCache((Class<? extends AsnConverter<byte[], Object>>) listTaggedField.getConverter());
+                            final AsnConverter<byte[], Object> asnConverter = loadAsnConverterFromCache((Class<? extends AsnConverter<byte[], Object>>) collectionTaggedField.getConverter());
                             final byte[] encodedFieldValue = asnConverter.encode(e);
-                            collectionBuilder.addValue(encodePrimitive(listTaggedField.getElementTag(), encodedFieldValue));
+                            collectionBuilder.addValue(encodePrimitive(collectionTaggedField.getElementTag(), encodedFieldValue));
                         });
                     }
 
