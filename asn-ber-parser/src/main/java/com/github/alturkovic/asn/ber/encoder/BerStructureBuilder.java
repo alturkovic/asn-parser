@@ -32,11 +32,11 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BerStructureBuilder {
     private final ByteArrayOutputStream result = new ByteArrayOutputStream();
     private final List<byte[]> values = new ArrayList<>();
-    private int totalLength = 0;
 
     public BerStructureBuilder(final BerTag tag) {
         try {
@@ -47,13 +47,12 @@ public class BerStructureBuilder {
     }
 
     public void addValue(final byte[] value) {
-        totalLength += value.length;
         values.add(value);
     }
 
     public byte[] build() {
         try {
-            result.write(BerUtils.encodeLength(totalLength));
+            result.write(BerUtils.encodeLength(values.stream().mapToInt(b -> b.length).sum()));
             for (final byte[] value : values) {
                 result.write(value);
             }

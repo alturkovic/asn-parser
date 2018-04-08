@@ -58,7 +58,6 @@ public class BerTag implements Tag {
             return typeComparison;
         }
 
-
         return Integer.compare(value, ((BerTag) o).value);
     }
 }
