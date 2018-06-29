@@ -32,16 +32,34 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Represents a collection of elements, such as SEQUENCE OF, SET, SET OF...
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface AsnCollection {
+    /**
+     * Tag of the collection.
+     */
     AsnTag value() default @AsnTag;
 
+    /**
+     * Tag of the underlying collection elements, usually its SEQUENCE (UNIVERSAL 16).
+     */
     AsnTag elementTag() default @AsnTag;
 
+    /**
+     * Indicates if the collection contains structured or primitive types.
+     */
     boolean structured() default true;
 
+    /**
+     * The type of the collection elements.
+     */
     Class<?> type();
 
+    /**
+     * Converter used for decoding elements.
+     */
     Class<? extends AsnConverter<?, ?>> asnConverter() default AutoConverter.class;
 }

@@ -24,6 +24,19 @@
 
 package com.github.alturkovic.asn.decoder;
 
+/**
+ * Used for decoding Asn data.
+ *
+ * @param <I> type of input
+ */
 public interface AsnDecoder<I> {
+    /**
+     * Decodes input raw data into specific classes.
+     *
+     * @param clazz type of output
+     * @param input raw Asn data
+     * @param <T> output class
+     * @return decoded data
+     */
     <T> T decode(Class<T> clazz, I input);
 }

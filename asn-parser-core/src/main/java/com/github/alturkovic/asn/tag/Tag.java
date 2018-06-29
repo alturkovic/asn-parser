@@ -24,6 +24,8 @@
 
 package com.github.alturkovic.asn.tag;
 
-// marker
+/**
+ * A marker interface for Asn tags.
+ */
 public interface Tag extends Comparable<Tag> {
 }

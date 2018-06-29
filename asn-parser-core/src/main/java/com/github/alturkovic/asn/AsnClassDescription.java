@@ -41,6 +41,9 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * The cached representation of a class. All annotated fields of a class will be analyzed and stored for further processing.
+ */
 public class AsnClassDescription {
     private Map<Tag, List<TaggedField>> multimap;
     private List<TaggedField> classOrderedTaggedFields;
@@ -106,7 +109,7 @@ public class AsnClassDescription {
     }
 
     private Tag getTag(final TagFactory tagFactory, final AsnAutoResolver asnAutoResolver, final AsnTag asnTag, final Class<?> clazz, final boolean structured) {
-        if (asnAutoResolver.shouldTryToResolveUniversal(asnTag)) {
+        if (asnTag.value() == -1) {
             return asnAutoResolver.getUniversalTag(clazz, structured);
         }
 

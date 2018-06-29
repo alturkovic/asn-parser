@@ -30,6 +30,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Keeps count of instances of the same element.
+ *
+ * @param <T> element type
+ */
 @AllArgsConstructor
 public class MultiSet<T> {
     private final Map<T, AtomicInteger> counter;
@@ -38,11 +43,22 @@ public class MultiSet<T> {
         this(new HashMap<>());
     }
 
+    /**
+     * Returns the count of elements that were added for the given key.
+     *
+     * @param key key
+     * @return count
+     */
     public int count(final T key) {
         final AtomicInteger count = counter.get(key);
         return count == null ? 0 : count.get();
     }
 
+    /**
+     * Increments the counter for the given key.
+     *
+     * @param key key
+     */
     public void add(final T key) {
         counter.computeIfAbsent(key, aKey -> new AtomicInteger()).incrementAndGet();
     }

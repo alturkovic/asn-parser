@@ -31,10 +31,20 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Represents the tag in the TLV describing a specific location.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface AsnTag {
+    /**
+     * Tag type. UNIVERSAL, APPLICATION, CONTEXT, PRIVATE
+     */
     Type type() default Type.CONTEXT;
 
+    /**
+     * Tag value. If the value is -1, it is a hint for the decoder/encoder
+     * to try to resolve a UNIVERSAL tag, regardless of {@link #type()}.
+     */
     int value() default -1;
 }

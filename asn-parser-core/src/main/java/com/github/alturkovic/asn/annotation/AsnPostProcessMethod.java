@@ -29,8 +29,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Call a method on an object after decoding.
+ * Method is expected to accept no parameters.
+ */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AsnPostProcessMethod {
+    /**
+     * The method to call.
+     */
     String value();
 }

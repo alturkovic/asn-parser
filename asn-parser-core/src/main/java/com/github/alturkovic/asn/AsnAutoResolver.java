@@ -24,14 +24,27 @@
 
 package com.github.alturkovic.asn;
 
-import com.github.alturkovic.asn.annotation.AsnTag;
 import com.github.alturkovic.asn.converter.AsnConverter;
 import com.github.alturkovic.asn.tag.Tag;
 
+/**
+ * Resolves encoding-specific universal details.
+ */
 public interface AsnAutoResolver {
+    /**
+     * Resolves the universal converter for the given class.
+     *
+     * @param c class
+     * @return default converter
+     */
     Class<? extends AsnConverter<?, ?>> getUniversalConverterClass(Class<?> c);
 
+    /**
+     * Resolves the universal tag for the given class.
+     *
+     * @param c class
+     * @param constructed indicates if the tag is structured or primitive
+     * @return universal tag
+     */
     Tag getUniversalTag(Class<?> c, boolean constructed);
-
-    boolean shouldTryToResolveUniversal(AsnTag asnTag);
 }

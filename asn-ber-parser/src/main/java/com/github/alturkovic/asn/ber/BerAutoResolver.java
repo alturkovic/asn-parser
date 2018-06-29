@@ -95,11 +95,6 @@ public class BerAutoResolver implements AsnAutoResolver {
         return new BerTag(value, Type.UNIVERSAL, constructed);
     }
 
-    @Override
-    public boolean shouldTryToResolveUniversal(final AsnTag asnTag) {
-        return asnTag.value() == -1;
-    }
-
     private Class<?> supportedWrapperToPrimitive(final Class<?> clazz) {
         if (clazz == Integer.class) {
             return int.class;

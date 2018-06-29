@@ -24,6 +24,9 @@
 
 package com.github.alturkovic.asn.converter;
 
+/**
+ * A no-op converter.
+ */
 public class AutoConverter implements AsnConverter<Object, Object> {
 
     @Override

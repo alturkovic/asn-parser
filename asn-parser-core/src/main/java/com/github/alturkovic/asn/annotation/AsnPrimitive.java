@@ -32,10 +32,19 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Represents a primitive type, such as BOOLEAN, INTEGER, IA5String, ...
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface AsnPrimitive {
+    /**
+     * Tag of the primitive.
+     */
     AsnTag value() default @AsnTag;
 
+    /**
+     * Converter used for decoding.
+     */
     Class<? extends AsnConverter<?, ?>> asnConverter() default AutoConverter.class;
 }

@@ -29,8 +29,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Represents a structure of elements, an arbitrary SEQUENCE.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.FIELD})
 public @interface AsnStructure {
+    /**
+     * Tag of the structure.
+     */
     AsnTag value() default @AsnTag;
 }

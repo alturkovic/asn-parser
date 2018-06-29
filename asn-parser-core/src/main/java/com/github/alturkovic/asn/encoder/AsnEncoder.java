@@ -24,6 +24,18 @@
 
 package com.github.alturkovic.asn.encoder;
 
+/**
+ * Used for encoding into Asn data.
+ *
+ * @param <O> type of output
+ */
 public interface AsnEncoder<O> {
+
+    /**
+     * Encodes objects into raw data.
+     *
+     * @param object object to encode
+     * @return encoded data
+     */
     O encode(Object object);
 }

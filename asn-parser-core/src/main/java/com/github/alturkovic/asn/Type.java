@@ -24,6 +24,9 @@
 
 package com.github.alturkovic.asn;
 
+/**
+ * Tag type.
+ */
 public enum Type {
     UNIVERSAL(0, 'U'), APPLICATION(1, 'A'), CONTEXT(2, 'C'), PRIVATE(3, 'P');
 
