@@ -28,11 +28,11 @@ import java.io.InputStream;
 
 public class BerValueReader extends AbstractInputStreamReader {
 
-    public byte[] read(final InputStream inputStream, final int bytesToRead) {
-        if (bytesToRead == 0) {
-            return new byte[0];
-        }
-
-        return readBytes(inputStream, bytesToRead);
+  public byte[] read(final InputStream inputStream, final int bytesToRead) {
+    if (bytesToRead == 0) {
+      return new byte[0];
     }
+
+    return readBytes(inputStream, bytesToRead);
+  }
 }

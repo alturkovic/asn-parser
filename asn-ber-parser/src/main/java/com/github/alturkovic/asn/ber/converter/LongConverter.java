@@ -27,30 +27,29 @@ package com.github.alturkovic.asn.ber.converter;
 import com.github.alturkovic.asn.ber.util.HexUtils;
 import com.github.alturkovic.asn.converter.AsnConverter;
 import com.github.alturkovic.asn.exception.AsnConvertException;
-
 import java.math.BigInteger;
 
 public class LongConverter implements AsnConverter<byte[], Long> {
 
-    @Override
-    public Long decode(final byte[] data) {
-        if (data == null) {
-            return null;
-        }
-
-        try {
-            return new BigInteger(data).longValueExact();
-        } catch (final ArithmeticException | NumberFormatException e) {
-            throw new AsnConvertException(String.format("Cannot convert %s to long", HexUtils.encode(data)), e);
-        }
+  @Override
+  public Long decode(final byte[] data) {
+    if (data == null) {
+      return null;
     }
 
-    @Override
-    public byte[] encode(final Long data) {
-        if (data == null) {
-            return null;
-        }
-
-        return BigInteger.valueOf(data).toByteArray();
+    try {
+      return new BigInteger(data).longValueExact();
+    } catch (final ArithmeticException | NumberFormatException e) {
+      throw new AsnConvertException(String.format("Cannot convert %s to long", HexUtils.encode(data)), e);
     }
+  }
+
+  @Override
+  public byte[] encode(final Long data) {
+    if (data == null) {
+      return null;
+    }
+
+    return BigInteger.valueOf(data).toByteArray();
+  }
 }

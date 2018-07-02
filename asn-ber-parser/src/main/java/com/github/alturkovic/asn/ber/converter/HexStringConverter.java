@@ -30,25 +30,25 @@ import com.github.alturkovic.asn.exception.AsnConvertException;
 
 public class HexStringConverter implements AsnConverter<byte[], String> {
 
-    @Override
-    public String decode(final byte[] data) {
-        if (data == null) {
-            return null;
-        }
-
-        return HexUtils.encode(data);
+  @Override
+  public String decode(final byte[] data) {
+    if (data == null) {
+      return null;
     }
 
-    @Override
-    public byte[] encode(final String data) {
-        if (data == null) {
-            return null;
-        }
+    return HexUtils.encode(data);
+  }
 
-        try {
-            return HexUtils.decode(data);
-        } catch (final RuntimeException e) {
-            throw new AsnConvertException(String.format("Cannot encode %s as hex", data), e);
-        }
+  @Override
+  public byte[] encode(final String data) {
+    if (data == null) {
+      return null;
     }
+
+    try {
+      return HexUtils.decode(data);
+    } catch (final RuntimeException e) {
+      throw new AsnConvertException(String.format("Cannot encode %s as hex", data), e);
+    }
+  }
 }

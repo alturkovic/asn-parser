@@ -28,41 +28,41 @@ package com.github.alturkovic.asn;
  * Tag type.
  */
 public enum Type {
-    UNIVERSAL(0, 'U'), APPLICATION(1, 'A'), CONTEXT(2, 'C'), PRIVATE(3, 'P');
+  UNIVERSAL(0, 'U'), APPLICATION(1, 'A'), CONTEXT(2, 'C'), PRIVATE(3, 'P');
 
-    private final int code;
-    private final char character;
+  private final int code;
+  private final char character;
 
-    Type(final int code, final char character) {
-        this.code = code;
-        this.character = character;
+  Type(final int code, final char character) {
+    this.code = code;
+    this.character = character;
+  }
+
+  public int getCode() {
+    return code;
+  }
+
+  public char getCharacter() {
+    return character;
+  }
+
+  public static Type fromCode(final int code) {
+    for (final Type type : Type.values()) {
+      if (type.getCode() == code) {
+        return type;
+      }
     }
 
-    public static Type fromCode(final int code) {
-        for (final Type type : Type.values()) {
-            if (type.getCode() == code) {
-                return type;
-            }
-        }
+    throw new IllegalArgumentException("Unknown Type code: " + code);
+  }
 
-        throw new IllegalArgumentException("Unknown Type code: " + code);
+  public static Type fromCharacter(final char character) {
+    for (final Type type : Type.values()) {
+      if (type.getCharacter() == character) {
+        return type;
+      }
     }
 
-    public static Type fromCharacter(final char character) {
-        for (final Type type : Type.values()) {
-            if (type.getCharacter() == character) {
-                return type;
-            }
-        }
-
-        throw new IllegalArgumentException("Unknown Type character: " + character);
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public char getCharacter() {
-        return character;
-    }
+    throw new IllegalArgumentException("Unknown Type character: " + character);
+  }
 }

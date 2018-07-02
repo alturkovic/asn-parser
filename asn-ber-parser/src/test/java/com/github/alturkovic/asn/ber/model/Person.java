@@ -25,15 +25,18 @@
 package com.github.alturkovic.asn.ber.model;
 
 import com.github.alturkovic.asn.Type;
-import com.github.alturkovic.asn.annotation.*;
+import com.github.alturkovic.asn.annotation.AsnCollection;
+import com.github.alturkovic.asn.annotation.AsnPostProcessMethod;
+import com.github.alturkovic.asn.annotation.AsnPrimitive;
+import com.github.alturkovic.asn.annotation.AsnStructure;
+import com.github.alturkovic.asn.annotation.AsnTag;
 import com.github.alturkovic.asn.ber.converter.HexStringConverter;
+import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
-import java.util.Set;
 
 @Data
 @Builder
@@ -43,27 +46,27 @@ import java.util.Set;
 @AsnStructure(@AsnTag(value = 16, type = Type.PRIVATE))
 public class Person {
 
-    @AsnPrimitive
-    private boolean male;
+  @AsnPrimitive
+  private boolean male;
 
-    @AsnPrimitive
-    private Integer age;
+  @AsnPrimitive
+  private Integer age;
 
-    @AsnCollection(elementTag = @AsnTag(5), structured = false, asnConverter = HexStringConverter.class, type = String.class)
-    private Set<String> phones;
+  @AsnCollection(elementTag = @AsnTag(5), structured = false, asnConverter = HexStringConverter.class, type = String.class)
+  private Set<String> phones;
 
-    @AsnCollection(value = @AsnTag(1), type = Address.class)
-    private List<Address> addresses;
+  @AsnCollection(value = @AsnTag(1), type = Address.class)
+  private List<Address> addresses;
 
-    private boolean adult;
+  private boolean adult;
 
-    public Person(final boolean male, final int age, final Set<String> phones) {
-        this.male = male;
-        this.age = age;
-        this.phones = phones;
-    }
+  public Person(final boolean male, final int age, final Set<String> phones) {
+    this.male = male;
+    this.age = age;
+    this.phones = phones;
+  }
 
-    private void postDecode() {
-        adult = age >= 18;
-    }
+  private void postDecode() {
+    adult = age >= 18;
+  }
 }

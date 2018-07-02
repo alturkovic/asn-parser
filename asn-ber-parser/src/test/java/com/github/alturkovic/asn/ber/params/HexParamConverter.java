@@ -30,16 +30,16 @@ import junitparams.converters.Converter;
 
 public class HexParamConverter implements Converter<HexParam, byte[]> {
 
-    @Override
-    public void initialize(final HexParam annotation) {
-    }
+  @Override
+  public void initialize(final HexParam annotation) {
+  }
 
-    @Override
-    public byte[] convert(final Object param) throws ConversionFailedException {
-        try {
-            return HexUtils.decode(String.valueOf(param));
-        } catch (final RuntimeException e) {
-            throw new ConversionFailedException(String.format("failed: %s", e));
-        }
+  @Override
+  public byte[] convert(final Object param) throws ConversionFailedException {
+    try {
+      return HexUtils.decode(String.valueOf(param));
+    } catch (final RuntimeException e) {
+      throw new ConversionFailedException(String.format("failed: %s", e));
     }
+  }
 }

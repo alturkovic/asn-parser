@@ -34,30 +34,30 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = {"value", "type"})
 public class BerTag implements Tag {
-    private final int value;
-    private final Type type;
-    private final boolean constructed;
+  private final int value;
+  private final Type type;
+  private final boolean constructed;
 
-    public BerTag(final int value, final Type type, final boolean constructed) {
-        this.value = value;
-        this.type = type;
-        this.constructed = constructed;
+  public BerTag(final int value, final Type type, final boolean constructed) {
+    this.value = value;
+    this.type = type;
+    this.constructed = constructed;
+  }
+
+  @Override
+  // order by type, then by value
+  public int compareTo(final Tag o) {
+    if (!(o instanceof BerTag)) {
+      // should not happen, if it does, just mix the two, doesn't matter much
+      return 0;
     }
 
-    @Override
-    // order by type, then by value
-    public int compareTo(final Tag o) {
-        if (!(o instanceof BerTag)) {
-            // should not happen, if it does, just mix the two, doesn't matter much
-            return 0;
-        }
+    final int typeComparison = type.compareTo(((BerTag) o).type);
 
-        final int typeComparison = type.compareTo(((BerTag) o).type);
-
-        if (typeComparison != 0) {
-            return typeComparison;
-        }
-
-        return Integer.compare(value, ((BerTag) o).value);
+    if (typeComparison != 0) {
+      return typeComparison;
     }
+
+    return Integer.compare(value, ((BerTag) o).value);
+  }
 }

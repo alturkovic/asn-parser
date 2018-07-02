@@ -31,19 +31,19 @@ package com.github.alturkovic.asn.converter;
  * @param <D> decoding type
  */
 public interface AsnConverter<E, D> {
-    /**
-     * Decode raw Asn data.
-     *
-     * @param data data to decode
-     * @return decoded data
-     */
-    D decode(E data);
+  /**
+   * Decode raw Asn data.
+   *
+   * @param data data to decode
+   * @return decoded data
+   */
+  D decode(E data);
 
-    /**
-     * Encode to raw Asn data.
-     *
-     * @param data data to encode
-     * @return encoded data
-     */
-    E encode(D data);
+  /**
+   * Encode to raw Asn data.
+   *
+   * @param data data to encode
+   * @return encoded data
+   */
+  E encode(D data);
 }

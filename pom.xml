@@ -2,91 +2,112 @@
 
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.alturkovic</groupId>
-    <artifactId>asn-parser</artifactId>
-    <version>1.3.3</version>
+  <groupId>com.github.alturkovic</groupId>
+  <artifactId>asn-parser</artifactId>
+  <version>1.3.3</version>
 
-    <packaging>pom</packaging>
+  <packaging>pom</packaging>
 
-    <name>asn-parser</name>
-    <description>ASN.1 Decoding/Encoding</description>
+  <name>asn-parser</name>
+  <description>ASN.1 Decoding/Encoding</description>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>http://www.opensource.org/licenses/mit-license.php</url>
+    </license>
+  </licenses>
 
-        <lombok.version>1.16.16</lombok.version>
+  <developers>
+    <developer>
+      <name>Alen Turković</name>
+      <email>alturkovic@gmail.com</email>
+      <organizationUrl>https://github.com/alturkovic</organizationUrl>
+    </developer>
+  </developers>
 
-        <junit.version>4.12</junit.version>
-        <junit-params.version>1.0.5</junit-params.version>
-        <assertj-core.version>3.8.0</assertj-core.version>
-    </properties>
+  <scm>
+    <connection>scm:git:git://github.com/alturkovic/asn-parser.git</connection>
+    <developerConnection>scm:git:ssh://github.com:alturkovic/asn-parser.git</developerConnection>
+    <url>http://github.com/alturkovic/asn-parser/tree/master</url>
+  </scm>
 
-    <modules>
-        <module>asn-parser-core</module>
-        <module>asn-ber-parser</module>
-    </modules>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <java.version>1.8</java.version>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-                <optional>true</optional>
-            </dependency>
+    <lombok.version>1.16.16</lombok.version>
 
-            <!-- MODULES -->
-            <dependency>
-                <groupId>com.github.alturkovic</groupId>
-                <artifactId>asn-parser-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.alturkovic</groupId>
-                <artifactId>asn-ber-parser</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+    <junit.version>4.12</junit.version>
+    <junit-params.version>1.0.5</junit-params.version>
+    <assertj-core.version>3.8.0</assertj-core.version>
+  </properties>
 
-            <!-- TEST -->
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>pl.pragmatists</groupId>
-                <artifactId>JUnitParams</artifactId>
-                <version>${junit-params.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.assertj</groupId>
-                <artifactId>assertj-core</artifactId>
-                <version>${assertj-core.version}</version>
-                <scope>test</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+  <modules>
+    <module>asn-parser-core</module>
+    <module>asn-ber-parser</module>
+  </modules>
 
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.6.1</version>
-                    <configuration>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
-                        <encoding>${project.build.sourceEncoding}</encoding>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${lombok.version}</version>
+        <optional>true</optional>
+      </dependency>
+
+      <!-- MODULES -->
+      <dependency>
+        <groupId>com.github.alturkovic</groupId>
+        <artifactId>asn-parser-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.alturkovic</groupId>
+        <artifactId>asn-ber-parser</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- TEST -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>pl.pragmatists</groupId>
+        <artifactId>JUnitParams</artifactId>
+        <version>${junit-params.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>${assertj-core.version}</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.6.1</version>
+          <configuration>
+            <source>${java.version}</source>
+            <target>${java.version}</target>
+            <encoding>${project.build.sourceEncoding}</encoding>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 </project>

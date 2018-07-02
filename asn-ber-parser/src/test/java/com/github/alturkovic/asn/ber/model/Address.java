@@ -35,12 +35,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Address {
 
-    @AsnPrimitive
-    private String street;
+  @AsnPrimitive
+  private String street;
 
-    @AsnPrimitive
-    private int number;
+  @AsnPrimitive
+  private int number;
 
-    @AsnPrimitive(@AsnTag(2))
-    private boolean enabled;
+  @AsnPrimitive(@AsnTag(2))
+  private boolean enabled;
 }

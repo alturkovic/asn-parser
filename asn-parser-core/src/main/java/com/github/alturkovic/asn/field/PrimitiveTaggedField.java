@@ -26,25 +26,24 @@ package com.github.alturkovic.asn.field;
 
 import com.github.alturkovic.asn.converter.AsnConverter;
 import com.github.alturkovic.asn.tag.Tag;
+import java.lang.reflect.Field;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-
-import java.lang.reflect.Field;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class PrimitiveTaggedField extends TaggedField {
-    private final Class<? extends AsnConverter<?, ?>> converter;
+  private final Class<? extends AsnConverter<?, ?>> converter;
 
-    public PrimitiveTaggedField(final int fieldPosition, final Tag tag, final Field field, final Class<? extends AsnConverter<?, ?>> converter) {
-        super(fieldPosition, tag, field);
-        this.converter = converter;
-    }
+  public PrimitiveTaggedField(final int fieldPosition, final Tag tag, final Field field, final Class<? extends AsnConverter<?, ?>> converter) {
+    super(fieldPosition, tag, field);
+    this.converter = converter;
+  }
 
-    @Override
-    public boolean isPrimitive() {
-        return true;
-    }
+  @Override
+  public boolean isPrimitive() {
+    return true;
+  }
 }

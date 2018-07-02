@@ -28,27 +28,26 @@ import com.github.alturkovic.asn.ber.model.Address;
 import com.github.alturkovic.asn.ber.model.Person;
 import com.github.alturkovic.asn.ber.util.HexUtils;
 import com.github.alturkovic.asn.encoder.AsnEncoder;
-import org.junit.Test;
-
 import java.util.HashSet;
+import org.junit.Test;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BerEncoderTest {
 
-    private final AsnEncoder<byte[]> encoder = new BerEncoderBuilder().build();
+  private final AsnEncoder<byte[]> encoder = new BerEncoderBuilder().build();
 
-    @Test
-    public void shouldEncodePersonExample() {
-        final byte[] encodedHex = encoder.encode(Person.builder()
-                .male(true)
-                .age(24)
-                .adult(true)
-                .phones(new HashSet<>(asList("385998069002", "385998069003")))
-                .addresses(asList(new Address("First", 1, true), new Address("Second", 2, false)))
-                .build());
+  @Test
+  public void shouldEncodePersonExample() {
+    final byte[] encodedHex = encoder.encode(Person.builder()
+        .male(true)
+        .age(24)
+        .adult(true)
+        .phones(new HashSet<>(asList("385998069002", "385998069003")))
+        .addresses(asList(new Address("First", 1, true), new Address("Second", 2, false)))
+        .build());
 
-        assertThat(HexUtils.decode("F0390101FF020118311085063859980690038506385998069002A11F300D040546697273740201018201FF300E04065365636F6E64020102820100")).isEqualTo(encodedHex);
-    }
+    assertThat(HexUtils.decode("F0390101FF020118311085063859980690038506385998069002A11F300D040546697273740201018201FF300E04065365636F6E64020102820100")).isEqualTo(encodedHex);
+  }
 }

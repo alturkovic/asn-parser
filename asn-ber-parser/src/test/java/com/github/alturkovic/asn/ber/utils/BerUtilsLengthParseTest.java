@@ -38,39 +38,39 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(JUnitParamsRunner.class)
 public class BerUtilsLengthParseTest {
 
-    @Test
-    @Parameters({
-            "83000002, 2",
-            "820254, 596",
-            "820119, 281",
-            "820147, 327",
-            "8201b3, 435",
-            "820080, 128",
-            "8180, 128",
-            "7f, 127",
-            "3c, 60",
-            "08, 8"
-    })
-    @TestCaseName("[{index}] parse: ({0})")
-    public void shouldParseLength(@HexParam final byte[] given, final int length) throws Exception {
-        assertThat(BerUtils.parseLength(given)).isEqualTo(length);
-    }
+  @Test
+  @Parameters({
+      "83000002, 2",
+      "820254, 596",
+      "820119, 281",
+      "820147, 327",
+      "8201b3, 435",
+      "820080, 128",
+      "8180, 128",
+      "7f, 127",
+      "3c, 60",
+      "08, 8"
+  })
+  @TestCaseName("[{index}] parse: ({0})")
+  public void shouldParseLength(@HexParam final byte[] given, final int length) throws Exception {
+    assertThat(BerUtils.parseLength(given)).isEqualTo(length);
+  }
 
-    @Parameters("80")
-    @Test(expected = AsnParseException.class)
-    public void shouldFailBecauseLengthIsOneByteAndFirstBitIsOne(@HexParam final byte[] data) throws Exception {
-        BerUtils.parseLength(data);
-    }
+  @Parameters("80")
+  @Test(expected = AsnParseException.class)
+  public void shouldFailBecauseLengthIsOneByteAndFirstBitIsOne(@HexParam final byte[] data) throws Exception {
+    BerUtils.parseLength(data);
+  }
 
-    @Parameters("5080")
-    @Test(expected = AsnParseException.class)
-    public void shouldFailBecauseFirstBitIsNotOne(@HexParam final byte[] data) throws Exception {
-        BerUtils.parseLength(data);
-    }
+  @Parameters("5080")
+  @Test(expected = AsnParseException.class)
+  public void shouldFailBecauseFirstBitIsNotOne(@HexParam final byte[] data) throws Exception {
+    BerUtils.parseLength(data);
+  }
 
-    @Parameters("831A46")
-    @Test(expected = AsnParseException.class)
-    public void shouldFailBecauseByteArrayLengthIsNotAsDescribedInFirstByte(@HexParam final byte[] data) throws Exception {
-        BerUtils.parseLength(data);
-    }
+  @Parameters("831A46")
+  @Test(expected = AsnParseException.class)
+  public void shouldFailBecauseByteArrayLengthIsNotAsDescribedInFirstByte(@HexParam final byte[] data) throws Exception {
+    BerUtils.parseLength(data);
+  }
 }

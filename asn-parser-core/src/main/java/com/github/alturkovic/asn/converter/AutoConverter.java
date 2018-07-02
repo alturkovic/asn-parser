@@ -29,13 +29,13 @@ package com.github.alturkovic.asn.converter;
  */
 public class AutoConverter implements AsnConverter<Object, Object> {
 
-    @Override
-    public Object decode(final Object data) {
-        return data;
-    }
+  @Override
+  public Object decode(final Object data) {
+    return data;
+  }
 
-    @Override
-    public Object encode(final Object data) {
-        return data;
-    }
+  @Override
+  public Object encode(final Object data) {
+    return data;
+  }
 }

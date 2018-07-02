@@ -36,8 +36,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AsnPostProcessMethod {
-    /**
-     * The method to call.
-     */
-    String value();
+  /**
+   * The method to call.
+   */
+  String value();
 }

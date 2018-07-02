@@ -26,39 +26,37 @@ package com.github.alturkovic.asn.ber.encoder;
 
 import com.github.alturkovic.asn.ber.tag.BerTag;
 import com.github.alturkovic.asn.ber.util.BerUtils;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class BerStructureBuilder {
-    private final ByteArrayOutputStream result = new ByteArrayOutputStream();
-    private final List<byte[]> values = new ArrayList<>();
+  private final ByteArrayOutputStream result = new ByteArrayOutputStream();
+  private final List<byte[]> values = new ArrayList<>();
 
-    public BerStructureBuilder(final BerTag tag) {
-        try {
-            result.write(BerUtils.convert(tag));
-        } catch (final IOException e) {
-            throw new UncheckedIOException(e);
-        }
+  public BerStructureBuilder(final BerTag tag) {
+    try {
+      result.write(BerUtils.convert(tag));
+    } catch (final IOException e) {
+      throw new UncheckedIOException(e);
     }
+  }
 
-    public void addValue(final byte[] value) {
-        values.add(value);
-    }
+  public void addValue(final byte[] value) {
+    values.add(value);
+  }
 
-    public byte[] build() {
-        try {
-            result.write(BerUtils.encodeLength(values.stream().mapToInt(b -> b.length).sum()));
-            for (final byte[] value : values) {
-                result.write(value);
-            }
-            return result.toByteArray();
-        } catch (final IOException e) {
-            throw new UncheckedIOException(e);
-        }
+  public byte[] build() {
+    try {
+      result.write(BerUtils.encodeLength(values.stream().mapToInt(b -> b.length).sum()));
+      for (final byte[] value : values) {
+        result.write(value);
+      }
+      return result.toByteArray();
+    } catch (final IOException e) {
+      throw new UncheckedIOException(e);
     }
+  }
 }

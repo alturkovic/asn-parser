@@ -25,29 +25,28 @@
 package com.github.alturkovic.asn.ber.tlv;
 
 import com.github.alturkovic.asn.ber.util.BerUtils;
+import java.io.InputStream;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.io.InputStream;
 
 @Data
 @AllArgsConstructor
 public class BerDataReader implements TlvDataReader {
-    private final BerTagReader tagReader;
-    private final BerLengthReader lengthReader;
-    private final BerValueReader valueReader;
+  private final BerTagReader tagReader;
+  private final BerLengthReader lengthReader;
+  private final BerValueReader valueReader;
 
-    public BerDataReader() {
-        this.tagReader = new BerTagReader();
-        this.lengthReader = new BerLengthReader();
-        this.valueReader = new BerValueReader();
-    }
+  public BerDataReader() {
+    this.tagReader = new BerTagReader();
+    this.lengthReader = new BerLengthReader();
+    this.valueReader = new BerValueReader();
+  }
 
-    @Override
-    public BerData readNext(final InputStream inputStream) {
-        final byte[] tag = tagReader.read(inputStream);
-        final byte[] length = lengthReader.read(inputStream);
-        final byte[] value = valueReader.read(inputStream, BerUtils.parseLength(length));
-        return new BerData(tag, length, value);
-    }
+  @Override
+  public BerData readNext(final InputStream inputStream) {
+    final byte[] tag = tagReader.read(inputStream);
+    final byte[] length = lengthReader.read(inputStream);
+    final byte[] value = valueReader.read(inputStream, BerUtils.parseLength(length));
+    return new BerData(tag, length, value);
+  }
 }

@@ -26,15 +26,15 @@ package com.github.alturkovic.asn.exception;
 
 public abstract class AsnException extends RuntimeException {
 
-    public AsnException(final String msg) {
-        super(msg);
-    }
+  public AsnException(final String msg) {
+    super(msg);
+  }
 
-    public AsnException(final Exception e) {
-        super(e);
-    }
+  public AsnException(final Exception e) {
+    super(e);
+  }
 
-    public AsnException(final String msg, final Exception e) {
-        super(msg, e);
-    }
+  public AsnException(final String msg, final Exception e) {
+    super(msg, e);
+  }
 }

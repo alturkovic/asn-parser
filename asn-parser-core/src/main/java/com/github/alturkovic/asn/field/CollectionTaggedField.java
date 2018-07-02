@@ -26,31 +26,31 @@ package com.github.alturkovic.asn.field;
 
 import com.github.alturkovic.asn.converter.AsnConverter;
 import com.github.alturkovic.asn.tag.Tag;
+import java.lang.reflect.Field;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-
-import java.lang.reflect.Field;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class CollectionTaggedField extends TaggedField {
-    private final boolean structured;
-    private final Class<?> type;
-    private final Tag elementTag;
-    private final Class<? extends AsnConverter<?, ?>> converter;
+  private final boolean structured;
+  private final Class<?> type;
+  private final Tag elementTag;
+  private final Class<? extends AsnConverter<?, ?>> converter;
 
-    public CollectionTaggedField(final int fieldPosition, final Tag tag, final Field field, final boolean structured, final Class<?> type, final Tag elementTag, final Class<? extends AsnConverter<?, ?>> converter) {
-        super(fieldPosition, tag, field);
-        this.structured = structured;
-        this.type = type;
-        this.elementTag = elementTag;
-        this.converter = converter;
-    }
+  public CollectionTaggedField(final int fieldPosition, final Tag tag, final Field field, final boolean structured, final Class<?> type, final Tag elementTag,
+                               final Class<? extends AsnConverter<?, ?>> converter) {
+    super(fieldPosition, tag, field);
+    this.structured = structured;
+    this.type = type;
+    this.elementTag = elementTag;
+    this.converter = converter;
+  }
 
-    @Override
-    public boolean isCollection() {
-        return true;
-    }
+  @Override
+  public boolean isCollection() {
+    return true;
+  }
 }

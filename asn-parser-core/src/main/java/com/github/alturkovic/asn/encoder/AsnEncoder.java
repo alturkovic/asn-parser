@@ -31,11 +31,11 @@ package com.github.alturkovic.asn.encoder;
  */
 public interface AsnEncoder<O> {
 
-    /**
-     * Encodes objects into raw data.
-     *
-     * @param object object to encode
-     * @return encoded data
-     */
-    O encode(Object object);
+  /**
+   * Encodes objects into raw data.
+   *
+   * @param object object to encode
+   * @return encoded data
+   */
+  O encode(Object object);
 }

@@ -34,52 +34,51 @@ import com.github.alturkovic.asn.converter.AsnConverter;
 import com.github.alturkovic.asn.field.accessor.DirectFieldAccessor;
 import com.github.alturkovic.asn.field.accessor.FieldAccessor;
 import com.github.alturkovic.asn.tag.TagFactory;
-import lombok.NoArgsConstructor;
-
 import java.util.HashMap;
 import java.util.Map;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class BerDecoderBuilder {
 
-    private TagFactory tagFactory = new BerTagFactory();
-    private AsnAutoResolver autoResolver = new BerAutoResolver();
-    private FieldAccessor fieldAccessor = new DirectFieldAccessor();
-    private TlvDataReader tlvDataReader = new BerDataReader();
-    private Map<Class<?>, AsnClassDescription> classDescriptionCache = new HashMap<>();
-    private Map<Class<? extends AsnConverter<byte[], Object>>, AsnConverter<byte[], Object>> converterCache = new HashMap<>();
+  private TagFactory tagFactory = new BerTagFactory();
+  private AsnAutoResolver autoResolver = new BerAutoResolver();
+  private FieldAccessor fieldAccessor = new DirectFieldAccessor();
+  private TlvDataReader tlvDataReader = new BerDataReader();
+  private Map<Class<?>, AsnClassDescription> classDescriptionCache = new HashMap<>();
+  private Map<Class<? extends AsnConverter<byte[], Object>>, AsnConverter<byte[], Object>> converterCache = new HashMap<>();
 
-    public BerDecoderBuilder tagFactory(final TagFactory tagFactory) {
-        this.tagFactory = tagFactory;
-        return this;
-    }
+  public BerDecoderBuilder tagFactory(final TagFactory tagFactory) {
+    this.tagFactory = tagFactory;
+    return this;
+  }
 
-    public BerDecoderBuilder autoResolver(final AsnAutoResolver autoResolver) {
-        this.autoResolver = autoResolver;
-        return this;
-    }
+  public BerDecoderBuilder autoResolver(final AsnAutoResolver autoResolver) {
+    this.autoResolver = autoResolver;
+    return this;
+  }
 
-    public BerDecoderBuilder fieldAccessor(final FieldAccessor fieldAccessor) {
-        this.fieldAccessor = fieldAccessor;
-        return this;
-    }
+  public BerDecoderBuilder fieldAccessor(final FieldAccessor fieldAccessor) {
+    this.fieldAccessor = fieldAccessor;
+    return this;
+  }
 
-    public BerDecoderBuilder tlvDataReader(final TlvDataReader tlvDataReader) {
-        this.tlvDataReader = tlvDataReader;
-        return this;
-    }
+  public BerDecoderBuilder tlvDataReader(final TlvDataReader tlvDataReader) {
+    this.tlvDataReader = tlvDataReader;
+    return this;
+  }
 
-    public BerDecoderBuilder classDescriptionCache(final Map<Class<?>, AsnClassDescription> classDescriptionCache) {
-        this.classDescriptionCache = classDescriptionCache;
-        return this;
-    }
+  public BerDecoderBuilder classDescriptionCache(final Map<Class<?>, AsnClassDescription> classDescriptionCache) {
+    this.classDescriptionCache = classDescriptionCache;
+    return this;
+  }
 
-    public BerDecoderBuilder converterCache(final Map<Class<? extends AsnConverter<byte[], Object>>, AsnConverter<byte[], Object>> converterCache) {
-        this.converterCache = converterCache;
-        return this;
-    }
+  public BerDecoderBuilder converterCache(final Map<Class<? extends AsnConverter<byte[], Object>>, AsnConverter<byte[], Object>> converterCache) {
+    this.converterCache = converterCache;
+    return this;
+  }
 
-    public BerDecoder build() {
-        return new BerDecoder(tagFactory, autoResolver, fieldAccessor, tlvDataReader, classDescriptionCache, converterCache);
-    }
+  public BerDecoder build() {
+    return new BerDecoder(tagFactory, autoResolver, fieldAccessor, tlvDataReader, classDescriptionCache, converterCache);
+  }
 }

@@ -27,50 +27,49 @@ package com.github.alturkovic.asn.ber.tlv;
 import com.github.alturkovic.asn.ber.tag.BerTag;
 import com.github.alturkovic.asn.ber.util.BerUtils;
 import com.github.alturkovic.asn.tag.Tag;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 @Data
 @AllArgsConstructor
 public class BerDataExtractReader implements TlvDataReader {
-    private final List<BerTag> tags;
-    private final BerTagReader tagReader;
-    private final BerLengthReader lengthReader;
-    private final BerValueReader valueReader;
+  private final List<BerTag> tags;
+  private final BerTagReader tagReader;
+  private final BerLengthReader lengthReader;
+  private final BerValueReader valueReader;
 
-    public BerDataExtractReader(final List<BerTag> tags) {
-        this.tags = tags;
-        this.tagReader = new BerTagReader();
-        this.lengthReader = new BerLengthReader();
-        this.valueReader = new BerValueReader();
-    }
+  public BerDataExtractReader(final List<BerTag> tags) {
+    this.tags = tags;
+    this.tagReader = new BerTagReader();
+    this.lengthReader = new BerLengthReader();
+    this.valueReader = new BerValueReader();
+  }
 
-    @Override
-    public BerData readNext(final InputStream inputStream) {
-        byte[] tag;
-        byte[] length;
-        byte[] value;
+  @Override
+  public BerData readNext(final InputStream inputStream) {
+    byte[] tag;
+    byte[] length;
+    byte[] value;
 
-        int depth = 0;
-        InputStream stream = inputStream;
-        final int tagSize = tags.size();
-        do {
-            tag = tagReader.read(stream);
-            length = lengthReader.read(stream);
-            value = valueReader.read(stream, BerUtils.parseLength(length));
+    int depth = 0;
+    InputStream stream = inputStream;
+    final int tagSize = tags.size();
+    do {
+      tag = tagReader.read(stream);
+      length = lengthReader.read(stream);
+      value = valueReader.read(stream, BerUtils.parseLength(length));
 
-            final Tag parsedTag = BerUtils.parseTag(tag);
+      final Tag parsedTag = BerUtils.parseTag(tag);
 
-            if (parsedTag.equals(tags.get(depth))) {
-                depth++;
-                stream = new ByteArrayInputStream(value);
-            }
-        } while (depth < tagSize);
+      if (parsedTag.equals(tags.get(depth))) {
+        depth++;
+        stream = new ByteArrayInputStream(value);
+      }
+    } while (depth < tagSize);
 
-        return new BerData(tag, length, value);
-    }
+    return new BerData(tag, length, value);
+  }
 }

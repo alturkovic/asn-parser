@@ -24,12 +24,11 @@
 
 package com.github.alturkovic.asn.ber.params;
 
-import junitparams.converters.Param;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import junitparams.converters.Param;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)

@@ -26,7 +26,6 @@ package com.github.alturkovic.asn.annotation;
 
 import com.github.alturkovic.asn.converter.AsnConverter;
 import com.github.alturkovic.asn.converter.AutoConverter;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -38,28 +37,28 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface AsnCollection {
-    /**
-     * Tag of the collection.
-     */
-    AsnTag value() default @AsnTag;
+  /**
+   * Tag of the collection.
+   */
+  AsnTag value() default @AsnTag;
 
-    /**
-     * Tag of the underlying collection elements, usually its SEQUENCE (UNIVERSAL 16).
-     */
-    AsnTag elementTag() default @AsnTag;
+  /**
+   * Tag of the underlying collection elements, usually its SEQUENCE (UNIVERSAL 16).
+   */
+  AsnTag elementTag() default @AsnTag;
 
-    /**
-     * Indicates if the collection contains structured or primitive types.
-     */
-    boolean structured() default true;
+  /**
+   * Indicates if the collection contains structured or primitive types.
+   */
+  boolean structured() default true;
 
-    /**
-     * The type of the collection elements.
-     */
-    Class<?> type();
+  /**
+   * The type of the collection elements.
+   */
+  Class<?> type();
 
-    /**
-     * Converter used for decoding elements.
-     */
-    Class<? extends AsnConverter<?, ?>> asnConverter() default AutoConverter.class;
+  /**
+   * Converter used for decoding elements.
+   */
+  Class<? extends AsnConverter<?, ?>> asnConverter() default AutoConverter.class;
 }

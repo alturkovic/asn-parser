@@ -25,30 +25,29 @@
 package com.github.alturkovic.asn.field;
 
 import com.github.alturkovic.asn.tag.Tag;
-import lombok.Data;
-
 import java.lang.reflect.Field;
+import lombok.Data;
 
 @Data
 public abstract class TaggedField implements Comparable<TaggedField> {
-    private final int fieldPosition; // helps keep the class defined order when encoding
-    private final Tag tag;
-    private final Field field;
+  private final int fieldPosition; // helps keep the class defined order when encoding
+  private final Tag tag;
+  private final Field field;
 
-    public boolean isPrimitive() {
-        return false;
-    }
+  public boolean isPrimitive() {
+    return false;
+  }
 
-    public boolean isStructure() {
-        return false;
-    }
+  public boolean isStructure() {
+    return false;
+  }
 
-    public boolean isCollection() {
-        return false;
-    }
+  public boolean isCollection() {
+    return false;
+  }
 
-    @Override
-    public int compareTo(final TaggedField tf) {
-        return this.fieldPosition > tf.fieldPosition ? 1 : -1;
-    }
+  @Override
+  public int compareTo(final TaggedField tf) {
+    return this.fieldPosition > tf.fieldPosition ? 1 : -1;
+  }
 }

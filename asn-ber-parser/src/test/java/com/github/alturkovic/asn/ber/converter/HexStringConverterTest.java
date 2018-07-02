@@ -37,47 +37,47 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(JUnitParamsRunner.class)
 public class HexStringConverterTest {
 
-    private final AsnConverter<byte[], String> converter = new HexStringConverter();
+  private final AsnConverter<byte[], String> converter = new HexStringConverter();
 
-    // Decoding
+  // Decoding
 
-    @Test
-    @Parameters({
-            "00, 00",
-            "ff, ff",
-            "12f9, 12F9",
-            "1049, 1049",
-            "ff7f80, FF7f80",
-            "aaf8dc2a, aaf8dc2a"
-    })
-    @TestCaseName("[{index}] decode: ({0})")
-    public void shouldDecode(@HexParam final byte[] given, final String expected) throws Exception {
-        assertThat(converter.decode(given)).isEqualToIgnoringCase(expected);
-    }
+  @Test
+  @Parameters({
+      "00, 00",
+      "ff, ff",
+      "12f9, 12F9",
+      "1049, 1049",
+      "ff7f80, FF7f80",
+      "aaf8dc2a, aaf8dc2a"
+  })
+  @TestCaseName("[{index}] decode: ({0})")
+  public void shouldDecode(@HexParam final byte[] given, final String expected) throws Exception {
+    assertThat(converter.decode(given)).isEqualToIgnoringCase(expected);
+  }
 
-    @Test
-    public void shouldDecodeNullBecauseInputIsNull() throws Exception {
-        assertThat(converter.decode(null)).isNull();
-    }
+  @Test
+  public void shouldDecodeNullBecauseInputIsNull() throws Exception {
+    assertThat(converter.decode(null)).isNull();
+  }
 
-    // Encoding
+  // Encoding
 
-    @Test
-    @Parameters({
-            "00, 00",
-            "00, 00",
-            "12f9, 12f9",
-            "1049, 1049",
-            "ff7f80, ff7f80",
-            "aaf8dc2a, aaf8dc2a",
-    })
-    @TestCaseName("[{index}] encode: ({0})")
-    public void shouldEncode(final String given, @HexParam final byte[] expected) throws Exception {
-        assertThat(converter.encode(given)).isEqualTo(expected);
-    }
+  @Test
+  @Parameters({
+      "00, 00",
+      "00, 00",
+      "12f9, 12f9",
+      "1049, 1049",
+      "ff7f80, ff7f80",
+      "aaf8dc2a, aaf8dc2a",
+  })
+  @TestCaseName("[{index}] encode: ({0})")
+  public void shouldEncode(final String given, @HexParam final byte[] expected) throws Exception {
+    assertThat(converter.encode(given)).isEqualTo(expected);
+  }
 
-    @Test
-    public void shouldEncodeNullBecauseInputIsNull() throws Exception {
-        assertThat(converter.encode(null)).isNull();
-    }
+  @Test
+  public void shouldEncodeNullBecauseInputIsNull() throws Exception {
+    assertThat(converter.encode(null)).isNull();
+  }
 }

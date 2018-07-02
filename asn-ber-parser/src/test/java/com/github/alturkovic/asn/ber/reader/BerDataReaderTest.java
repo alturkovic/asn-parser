@@ -27,33 +27,32 @@ package com.github.alturkovic.asn.ber.reader;
 import com.github.alturkovic.asn.ber.params.HexParam;
 import com.github.alturkovic.asn.ber.tlv.BerData;
 import com.github.alturkovic.asn.ber.tlv.BerDataReader;
+import java.io.ByteArrayInputStream;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import junitparams.naming.TestCaseName;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.ByteArrayInputStream;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(JUnitParamsRunner.class)
 public class BerDataReaderTest {
 
-    @Test
-    @Parameters({
-            "800101b182, 80, 01, 01", // b182 is from the next TLV
-            "810322cbdc, 81, 03, 22cbdc",
-            "810322cbdcF02c, 81, 03, 22cbdc", // F02c is from the next TLV
-            "9F83330895F4c21abbc48daa, 9F8333, 08, 95F4c21abbc48daa",
-            "5f250c8002abcd8103def01202010c, 5f25, 0c, 8002abcd8103def01202010c"
-    })
-    @TestCaseName("[{index}] read: ({0})")
-    public void shouldRead(@HexParam final byte[] given, @HexParam final byte[] tag, @HexParam final byte[] length, @HexParam final byte[] value) {
-        final BerData rawData = new BerDataReader().readNext(new ByteArrayInputStream(given));
+  @Test
+  @Parameters({
+      "800101b182, 80, 01, 01", // b182 is from the next TLV
+      "810322cbdc, 81, 03, 22cbdc",
+      "810322cbdcF02c, 81, 03, 22cbdc", // F02c is from the next TLV
+      "9F83330895F4c21abbc48daa, 9F8333, 08, 95F4c21abbc48daa",
+      "5f250c8002abcd8103def01202010c, 5f25, 0c, 8002abcd8103def01202010c"
+  })
+  @TestCaseName("[{index}] read: ({0})")
+  public void shouldRead(@HexParam final byte[] given, @HexParam final byte[] tag, @HexParam final byte[] length, @HexParam final byte[] value) {
+    final BerData rawData = new BerDataReader().readNext(new ByteArrayInputStream(given));
 
-        assertThat(rawData.getTag()).isEqualTo(tag);
-        assertThat(rawData.getLength()).isEqualTo(length);
-        assertThat(rawData.getValue()).isEqualTo(value);
-    }
+    assertThat(rawData.getTag()).isEqualTo(tag);
+    assertThat(rawData.getLength()).isEqualTo(length);
+    assertThat(rawData.getValue()).isEqualTo(value);
+  }
 }

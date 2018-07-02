@@ -25,23 +25,22 @@
 package com.github.alturkovic.asn.field;
 
 import com.github.alturkovic.asn.tag.Tag;
+import java.lang.reflect.Field;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-
-import java.lang.reflect.Field;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class StructureTaggedField extends TaggedField {
 
-    public StructureTaggedField(final int fieldPosition, final Tag tag, final Field field) {
-        super(fieldPosition, tag, field);
-    }
+  public StructureTaggedField(final int fieldPosition, final Tag tag, final Field field) {
+    super(fieldPosition, tag, field);
+  }
 
-    @Override
-    public boolean isStructure() {
-        return true;
-    }
+  @Override
+  public boolean isStructure() {
+    return true;
+  }
 }

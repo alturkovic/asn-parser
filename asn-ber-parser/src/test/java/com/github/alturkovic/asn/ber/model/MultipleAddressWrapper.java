@@ -33,9 +33,9 @@ import lombok.Data;
 @AsnStructure(@AsnTag(value = 16, type = Type.UNIVERSAL))
 public class MultipleAddressWrapper {
 
-    @AsnStructure(@AsnTag(4))
-    private Address addressOne;
+  @AsnStructure(@AsnTag(4))
+  private Address addressOne;
 
-    @AsnStructure(@AsnTag(4))
-    private Address addressTwo;
+  @AsnStructure(@AsnTag(4))
+  private Address addressTwo;
 }

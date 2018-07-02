@@ -38,57 +38,57 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(JUnitParamsRunner.class)
 public class BooleanConverterTest {
 
-    private final AsnConverter<byte[], Boolean> converter = new BooleanConverter();
+  private final AsnConverter<byte[], Boolean> converter = new BooleanConverter();
 
-    // Decoding
+  // Decoding
 
-    @Test
-    @Parameters("ff")
-    public void shouldDecodeTrue(@HexParam final byte[] data) throws Exception {
-        final Boolean decode = converter.decode(data);
-        assertThat(decode).isTrue();
-    }
+  @Test
+  @Parameters("ff")
+  public void shouldDecodeTrue(@HexParam final byte[] data) throws Exception {
+    final Boolean decode = converter.decode(data);
+    assertThat(decode).isTrue();
+  }
 
-    @Test
-    @Parameters("00")
-    public void shouldDecodeFalse(@HexParam final byte[] data) throws Exception {
-        final Boolean decode = converter.decode(data);
-        assertThat(decode).isFalse();
-    }
+  @Test
+  @Parameters("00")
+  public void shouldDecodeFalse(@HexParam final byte[] data) throws Exception {
+    final Boolean decode = converter.decode(data);
+    assertThat(decode).isFalse();
+  }
 
-    @Test
-    public void shouldDecodeNullBecauseDataIsNull() throws Exception {
-        assertThat(converter.decode(null)).isNull();
-    }
+  @Test
+  public void shouldDecodeNullBecauseDataIsNull() throws Exception {
+    assertThat(converter.decode(null)).isNull();
+  }
 
-    @Parameters("00ff")
-    @Test(expected = AsnConvertException.class)
-    public void shouldFailBecauseLengthIsNotOne(@HexParam final byte[] data) throws Exception {
-        converter.decode(data);
-    }
+  @Parameters("00ff")
+  @Test(expected = AsnConvertException.class)
+  public void shouldFailBecauseLengthIsNotOne(@HexParam final byte[] data) throws Exception {
+    converter.decode(data);
+  }
 
-    @Parameters("aa")
-    @Test(expected = AsnConvertException.class)
-    public void shouldFailBecauseDataIsNotBoolean(@HexParam final byte[] data) throws Exception {
-        converter.decode(data);
-    }
+  @Parameters("aa")
+  @Test(expected = AsnConvertException.class)
+  public void shouldFailBecauseDataIsNotBoolean(@HexParam final byte[] data) throws Exception {
+    converter.decode(data);
+  }
 
-    // Encoding
+  // Encoding
 
-    @Test
-    public void shouldEncodeTrue() throws Exception {
-        final byte[] encoded = converter.encode(true);
-        assertThat(HexUtils.encode(encoded)).isEqualToIgnoringCase("FF");
-    }
+  @Test
+  public void shouldEncodeTrue() throws Exception {
+    final byte[] encoded = converter.encode(true);
+    assertThat(HexUtils.encode(encoded)).isEqualToIgnoringCase("FF");
+  }
 
-    @Test
-    public void shouldEncodeFalse() throws Exception {
-        final byte[] encoded = converter.encode(false);
-        assertThat(HexUtils.encode(encoded)).isEqualToIgnoringCase("00");
-    }
+  @Test
+  public void shouldEncodeFalse() throws Exception {
+    final byte[] encoded = converter.encode(false);
+    assertThat(HexUtils.encode(encoded)).isEqualToIgnoringCase("00");
+  }
 
-    @Test
-    public void shouldEncodeNullBecauseDataIsNull() throws Exception {
-        assertThat(converter.encode(null)).isNull();
-    }
+  @Test
+  public void shouldEncodeNullBecauseDataIsNull() throws Exception {
+    assertThat(converter.encode(null)).isNull();
+  }
 }

@@ -30,12 +30,12 @@ import com.github.alturkovic.asn.annotation.AsnTag;
  * A factory which produces Tags based on AsnTag annotations.
  */
 public interface TagFactory {
-    /**
-     * Tag represented by asnTag annotation.
-     *
-     * @param asnTag annotation describing the tag
-     * @param structured indicates if the tag is structured or primitive
-     * @return tag
-     */
-    Tag get(AsnTag asnTag, boolean structured);
+  /**
+   * Tag represented by asnTag annotation.
+   *
+   * @param asnTag     annotation describing the tag
+   * @param structured indicates if the tag is structured or primitive
+   * @return tag
+   */
+  Tag get(AsnTag asnTag, boolean structured);
 }

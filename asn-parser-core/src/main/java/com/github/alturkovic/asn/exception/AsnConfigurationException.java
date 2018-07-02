@@ -26,15 +26,15 @@ package com.github.alturkovic.asn.exception;
 
 public class AsnConfigurationException extends AsnException {
 
-    public AsnConfigurationException(final String msg) {
-        super(msg);
-    }
+  public AsnConfigurationException(final String msg) {
+    super(msg);
+  }
 
-    public AsnConfigurationException(final Exception e) {
-        super(e);
-    }
+  public AsnConfigurationException(final Exception e) {
+    super(e);
+  }
 
-    public AsnConfigurationException(final String msg, final Exception e) {
-        super(msg, e);
-    }
+  public AsnConfigurationException(final String msg, final Exception e) {
+    super(msg, e);
+  }
 }

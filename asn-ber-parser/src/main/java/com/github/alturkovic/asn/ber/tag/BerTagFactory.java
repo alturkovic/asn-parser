@@ -28,8 +28,8 @@ import com.github.alturkovic.asn.annotation.AsnTag;
 import com.github.alturkovic.asn.tag.TagFactory;
 
 public class BerTagFactory implements TagFactory {
-    @Override
-    public BerTag get(final AsnTag asnTag, final boolean structured) {
-        return new BerTag(asnTag.value(), asnTag.type(), structured);
-    }
+  @Override
+  public BerTag get(final AsnTag asnTag, final boolean structured) {
+    return new BerTag(asnTag.value(), asnTag.type(), structured);
+  }
 }

@@ -26,7 +26,6 @@ package com.github.alturkovic.asn.annotation;
 
 import com.github.alturkovic.asn.converter.AsnConverter;
 import com.github.alturkovic.asn.converter.AutoConverter;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -38,13 +37,13 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface AsnPrimitive {
-    /**
-     * Tag of the primitive.
-     */
-    AsnTag value() default @AsnTag;
+  /**
+   * Tag of the primitive.
+   */
+  AsnTag value() default @AsnTag;
 
-    /**
-     * Converter used for decoding.
-     */
-    Class<? extends AsnConverter<?, ?>> asnConverter() default AutoConverter.class;
+  /**
+   * Converter used for decoding.
+   */
+  Class<? extends AsnConverter<?, ?>> asnConverter() default AutoConverter.class;
 }

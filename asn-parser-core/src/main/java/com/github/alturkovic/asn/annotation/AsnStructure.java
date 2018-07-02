@@ -35,8 +35,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.FIELD})
 public @interface AsnStructure {
-    /**
-     * Tag of the structure.
-     */
-    AsnTag value() default @AsnTag;
+  /**
+   * Tag of the structure.
+   */
+  AsnTag value() default @AsnTag;
 }
