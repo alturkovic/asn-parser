@@ -58,6 +58,9 @@ public class Person {
   @AsnCollection(value = @AsnTag(1), type = Address.class)
   private List<Address> addresses;
 
+  @AsnPrimitive(@AsnTag(3))
+  private short shoeSize;
+
   private boolean adult;
 
   public Person(final boolean male, final int age, final Set<String> phones) {

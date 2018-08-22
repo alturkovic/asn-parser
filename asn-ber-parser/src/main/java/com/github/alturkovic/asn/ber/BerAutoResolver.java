@@ -27,11 +27,7 @@ package com.github.alturkovic.asn.ber;
 import com.github.alturkovic.asn.AsnAutoResolver;
 import com.github.alturkovic.asn.Type;
 import com.github.alturkovic.asn.UniversalTags;
-import com.github.alturkovic.asn.ber.converter.AsciiStringConverter;
-import com.github.alturkovic.asn.ber.converter.BooleanConverter;
-import com.github.alturkovic.asn.ber.converter.IntegerConverter;
-import com.github.alturkovic.asn.ber.converter.LongConverter;
-import com.github.alturkovic.asn.ber.converter.Utf8StringConverter;
+import com.github.alturkovic.asn.ber.converter.*;
 import com.github.alturkovic.asn.ber.tag.BerTag;
 import com.github.alturkovic.asn.converter.AsnConverter;
 import com.github.alturkovic.asn.converter.AutoConverter;
@@ -110,6 +106,10 @@ public class BerAutoResolver implements AsnAutoResolver {
       return boolean.class;
     }
 
+    if (clazz == Short.class) {
+      return short.class;
+    }
+
     return clazz;
   }
 
@@ -117,6 +117,7 @@ public class BerAutoResolver implements AsnAutoResolver {
   private enum Mappings {
     BOOLEAN(UniversalTags.BOOLEAN, boolean.class, BooleanConverter.class),
     INTEGER(UniversalTags.INTEGER, int.class, IntegerConverter.class),
+    SHORT(UniversalTags.INTEGER, short.class, ShortConverter.class),
     LONG(UniversalTags.INTEGER, long.class, LongConverter.class),
     BIT_STRING(UniversalTags.BIT_STRING, null, null), // not configured
     OCTET_STRING(UniversalTags.OCTET_STRING, byte[].class, AutoConverter.class),

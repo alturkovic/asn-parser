@@ -22,34 +22,35 @@
  * SOFTWARE.
  */
 
-package com.github.alturkovic.asn.ber.encoder;
+package com.github.alturkovic.asn.ber.converter;
 
-import com.github.alturkovic.asn.ber.model.Address;
-import com.github.alturkovic.asn.ber.model.Person;
 import com.github.alturkovic.asn.ber.util.HexUtils;
-import com.github.alturkovic.asn.encoder.AsnEncoder;
-import java.util.HashSet;
-import org.junit.Test;
+import com.github.alturkovic.asn.converter.AsnConverter;
+import com.github.alturkovic.asn.exception.AsnConvertException;
 
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
+import java.math.BigInteger;
 
-public class BerEncoderTest {
+public class ShortConverter implements AsnConverter<byte[], Short> {
 
-  private final AsnEncoder<byte[]> encoder = new BerEncoderBuilder().build();
+  @Override
+  public Short decode(final byte[] data) {
+    if (data == null) {
+      return null;
+    }
 
-  @Test
-  public void shouldEncodePersonExample() {
-    final byte[] encodedHex = encoder.encode(Person.builder()
-        .male(true)
-        .age(24)
-        .shoeSize((short) 40)
-        .adult(true)
-        .phones(new HashSet<>(asList("385998069002", "385998069003")))
-        .addresses(asList(new Address("First", 1, true), new Address("Second", 2, false)))
-        .build());
+    try {
+      return new BigInteger(data).shortValueExact();
+    } catch (final ArithmeticException | NumberFormatException e) {
+      throw new AsnConvertException(String.format("Cannot convert %s to short", HexUtils.encode(data)), e);
+    }
+  }
 
-    final String expected = "F03C0101FF020118311085063859980690038506385998069002A11F300D040546697273740201018201FF300E04065365636F6E64020102820100830128";
-    assertThat(HexUtils.decode(expected)).isEqualTo(encodedHex);
+  @Override
+  public byte[] encode(final Short data) {
+    if (data == null) {
+      return null;
+    }
+
+    return BigInteger.valueOf(data).toByteArray();
   }
 }
