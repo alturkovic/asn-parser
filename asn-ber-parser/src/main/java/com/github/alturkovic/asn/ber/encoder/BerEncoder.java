@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 Alen Turkovic
+ * Copyright (c) 2019 Alen Turkovic
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -96,7 +96,6 @@ public class BerEncoder implements AsnEncoder<byte[]> {
         } else if (taggedField.isCollection()) {
           final CollectionTaggedField collectionTaggedField = (CollectionTaggedField) taggedField;
 
-          //noinspection unchecked
           final Collection<Object> collection = fieldAccessor.getFieldValue(object, taggedField.getField());
 
           if (collection == null) {
@@ -164,7 +163,7 @@ public class BerEncoder implements AsnEncoder<byte[]> {
     return converterCache.computeIfAbsent(asnConverterClass, (aClass) -> {
       try {
         return aClass.newInstance();
-      } catch (InstantiationException | IllegalAccessException e) {
+      } catch (final InstantiationException | IllegalAccessException e) {
         throw new AsnConfigurationException(String.format("Cannot create a new instance of converter %s", aClass), e);
       }
     });

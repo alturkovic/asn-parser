@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 Alen Turkovic
+ * Copyright (c) 2019 Alen Turkovic
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,9 +27,6 @@ package com.github.alturkovic.asn.ber.converter;
 import com.github.alturkovic.asn.ber.util.HexUtils;
 import com.github.alturkovic.asn.converter.AsnConverter;
 import com.github.alturkovic.asn.exception.AsnConvertException;
-
-// 0 = false
-// -1 = true (255 | 0xFF)
 
 public class BooleanConverter implements AsnConverter<byte[], Boolean> {
 

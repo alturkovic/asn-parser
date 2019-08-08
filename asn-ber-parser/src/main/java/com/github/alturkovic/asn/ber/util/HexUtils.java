@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 Alen Turkovic
+ * Copyright (c) 2019 Alen Turkovic
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class HexUtils {
 
-  private final static char[] DIGITS = "0123456789ABCDEF".toCharArray();
+  private static final char[] DIGITS = "0123456789ABCDEF".toCharArray();
 
   public static String encode(final byte[] data) {
     final int l = data.length;

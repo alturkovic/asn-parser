@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 Alen Turkovic
+ * Copyright (c) 2019 Alen Turkovic
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -70,7 +70,7 @@ public class AsnClassDescription {
 
   public TaggedField findByTag(final Tag tag, final int index) {
     final List<TaggedField> taggedFields = multimap.get(tag);
-    if (taggedFields == null || taggedFields.size() == 0) {
+    if (taggedFields == null || taggedFields.isEmpty()) {
       return null;
     }
 
