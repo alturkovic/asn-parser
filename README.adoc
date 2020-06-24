@@ -1,9 +1,9 @@
 = Asn annotation based parser
 
-A Jackson inspired annotation based parser for Asn.1 data. Decode or encode your POJOs with annotations.
+A Jackson inspired annotation based parser for Asn.1 BER data.
+Decode or encode your POJOs with annotations.
 
-Most of the Asn.1 parser I have seen online were either using their specific classes to decode data (i.e. AsnInteger instead of using regular java int or Integer)
-or they came with a generator which converted Asn specifications into obscure code riddled with their internals.
+Most of the Asn.1 parser I have seen online were either using their specific classes to decode data (i.e. AsnInteger instead of using regular java int or Integer) or they came with a generator which converted Asn specifications into obscure code riddled with their internals.
 
 This parser allows selective encoding/decoding, meaning that you don't have to read all Asn.1 fields into your data, but selectively choose which fields to decode.
 
@@ -122,8 +122,8 @@ Add the following under your `<dependencies>`:
 ----
 <dependencies>
   <dependency>
-    <groupId>com.github.alturkovic.asn-parser</groupId>
-    <artifactId>asn-ber-parser</artifactId>
+    <groupId>com.github.alturkovic</groupId>
+    <artifactId>asn-parser</artifactId>
     <version>[insert latest version here]</version>
   </dependency>
 </dependencies>
