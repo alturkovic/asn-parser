@@ -154,13 +154,13 @@ public class BerDecoder implements AsnDecoder<byte[]> {
 
         if (taggedField.getType().isInterface()) {
           final var asnClassDescription = loadAsnClassDescription(taggedField.getType());
-          collection.add(decodePolymorphic(asnClassDescription, elementBerData.toTlv()));
+          final var decodedType = decodePolymorphic(asnClassDescription, elementBerData.toTlv());
+          if (decodedType != null) {
+            collection.add(decodedType);
+          }
         } else if (taggedField.getElementTag().equals(parsedElementTag)) {
           if (taggedField.isStructured()) {
-            final Object decoded = decodeStructure(taggedField.getType(), elementBerData.toTlv());
-            if (decoded != null) {
-              collection.add(decoded);
-            }
+            collection.add(decodeStructure(taggedField.getType(), elementBerData.toTlv()));
           } else {
             //noinspection unchecked
             final var asnConverter = loadAsnConverterFromCache((Class<? extends AsnConverter<byte[], Object>>) taggedField.getConverter());
