@@ -6,7 +6,7 @@
 
   <groupId>com.github.alturkovic</groupId>
   <artifactId>asn-parser</artifactId>
-  <version>1.4.2</version>
+  <version>1.4.3</version>
 
   <name>asn-parser</name>
   <description>ASN.1 Decoding/Encoding</description>
