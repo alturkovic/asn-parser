@@ -30,8 +30,6 @@ If you map your POJO properly, you can only decode 'answer' without decoding 'qu
 
 == What this parser does and does not support (at least currently)
 
-This parser currently supports only BER encoding rules. I wrote this library for a project I used for a work project and I haven't needed to use any other encodings (DER, PER, ...).
-
 There is no code generation tool, you will need to map the POJOs manually. Again, since I didn't need a generator, I didn't write one. I have used the selective capabilities
 extensively for decoding, and that enabled me to discard all of the data I wasn't interested in.
 
