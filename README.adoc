@@ -30,11 +30,9 @@ If you map your POJO properly, you can only decode 'answer' without decoding 'qu
 
 == What this parser does and does not support (at least currently)
 
-There is no code generation tool, you will need to map the POJOs manually. Again, since I didn't need a generator, I didn't write one. I have used the selective capabilities
-extensively for decoding, and that enabled me to discard all of the data I wasn't interested in.
+There is no code generation tool, you will need to map the POJOs manually. 
 
-This parser reads the data as it is without validations, meaning that if the TLV structure is valid, it will be decoded/encoded. There is (currently) no support for any validations,
-such as `SIZE(0..100)`.
+This parser reads the data as it is without validations, meaning that if the TLV structure is valid, it will be decoded/encoded. There is (currently) no support for any validations, such as `SIZE(0..100)`.
 
 == Example
 
