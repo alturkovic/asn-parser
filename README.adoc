@@ -28,13 +28,34 @@ END
 
 If you map your POJO properly, you can only decode 'answer' without decoding 'question' if you are not interested in it.
 
-== What this parser does and does not support (at least currently)
+== Importing into your project
 
-Only BER rules are supported. 
+=== Maven
 
-There is no code generation tool, you will need to map the POJOs manually. 
+Add the JitPack repository into your `pom.xml`.
 
-This parser reads the data as it is without validations, meaning that if the TLV structure is valid, it will be decoded/encoded. There is (currently) no support for any validations, such as `SIZE(0..100)`.
+[source,xml]
+----
+<repositories>
+  <repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+  </repository>
+</repositories>
+----
+
+Add the following under your `<dependencies>`:
+
+[source,xml]
+----
+<dependencies>
+  <dependency>
+    <groupId>com.github.alturkovic</groupId>
+    <artifactId>asn-parser</artifactId>
+    <version>[insert latest version here]</version>
+  </dependency>
+</dependencies>
+----
 
 == Example
 
@@ -98,34 +119,13 @@ Example of BER data representing a possible `Person` object.
 
 We can simply decode this data by calling `Person person = asnDecoder.decode(Person.class, byteArrayInputStream);`
 
-== Importing into your project
+== What this parser does and does not support (at least currently)
 
-=== Maven
+Only BER rules are supported. 
 
-Add the JitPack repository into your `pom.xml`.
+There is no code generation tool, you will need to map the POJOs manually. 
 
-[source,xml]
-----
-<repositories>
-  <repository>
-    <id>jitpack.io</id>
-    <url>https://jitpack.io</url>
-  </repository>
-</repositories>
-----
-
-Add the following under your `<dependencies>`:
-
-[source,xml]
-----
-<dependencies>
-  <dependency>
-    <groupId>com.github.alturkovic</groupId>
-    <artifactId>asn-parser</artifactId>
-    <version>[insert latest version here]</version>
-  </dependency>
-</dependencies>
-----
+This parser reads the data as it is without validations, meaning that if the TLV structure is valid, it will be decoded/encoded. There is (currently) no support for any validations, such as `SIZE(0..100)`.
 
 == Possible improvements
 
@@ -133,7 +133,6 @@ Add the following under your `<dependencies>`:
  * JavaDoc and documentation improvements
  * Class generator?
  * Asn validations (i.e. SIZE)
-
 
 == Last notes
 
