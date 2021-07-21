@@ -1,4 +1,4 @@
-image:https://img.shields.io/badge/Java-8%2B-ED8B00?style=for-the-badge&labelColor=ED8B00&logo=java&color=808080[Java] image:https://img.shields.io/jitpack/v/github/alturkovic/asn-parser?style=for-the-badge&logo=GitHub&labelColor=007ec5&color=808080[JitPack]
+image:https://img.shields.io/badge/Java-8%2B-ED8B00?style=for-the-badge&labelColor=ED8B00&logo=java&color=808080[Java] image:https://img.shields.io/jitpack/v/github/alturkovic/asn-parser?style=for-the-badge&logo=Git&labelColor=007ec5&color=808080&logoColor=white[JitPack]
 
 = Asn annotation based parser
 
